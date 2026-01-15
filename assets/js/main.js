@@ -1,5 +1,6 @@
 "use strict";
 let cities = [];
+let cityMap = new Map();
 let listings = [];
 let selectedCity = null;
 let activeFilters = new Set();
@@ -10,26 +11,28 @@ document.addEventListener('DOMContentLoaded', () => {
     initCitySelector();
     initTagFilters();
     handleUrlParams();
+    updateDescriptions();
 });
 function loadCities() {
     const citiesData = document.getElementById('cities-data');
     if (citiesData) {
         cities = JSON.parse(citiesData.textContent || '[]');
+        cities.forEach((city) => {
+            cityMap.set(city.name, city);
+        });
     }
 }
 function initListings() {
     const rows = document.querySelectorAll('.listing-row');
     rows.forEach((row) => {
-        const coordsAttr = row.dataset.coordinates;
+        const citiesAttr = row.dataset.cities;
         const tagsAttr = row.dataset.tags;
-        const typeAttr = row.dataset.type;
-        const stateAttr = row.dataset.state;
+        const contentAttr = row.dataset.content;
         listings.push({
             element: row,
-            coordinates: coordsAttr ? JSON.parse(coordsAttr) : [0, 0],
+            cities: citiesAttr ? JSON.parse(citiesAttr) : [],
             tags: tagsAttr ? JSON.parse(tagsAttr) : [],
-            type: typeAttr || '',
-            state: stateAttr || '',
+            content: contentAttr || '',
         });
     });
 }
@@ -80,7 +83,8 @@ function initCitySelector() {
     });
 }
 function selectCity(cityName) {
-    selectedCity = cities.find((c) => c.name === cityName) || null;
+    selectedCity = cityMap.get(cityName) || null;
+    updateLocations();
     updateDistances();
     sortByDistance();
 }
@@ -119,18 +123,19 @@ function initTagFilters() {
 function applyFilters() {
     listings.forEach((listing) => {
         let showByState = true;
-        let showByTagOrType = true;
-        // State filter (must match if any state filters are active)
+        let showByTag = true;
+        // State filter - check if any of the listing's cities are in the selected states
         if (activeStateFilters.size > 0) {
-            showByState = activeStateFilters.has(listing.state);
+            showByState = listing.cities.some((cityName) => {
+                const city = cityMap.get(cityName);
+                return city && activeStateFilters.has(city.state);
+            });
         }
-        // Tag/type filter (must match if any tag filters are active)
+        // Tag filter
         if (activeFilters.size > 0) {
-            const hasMatchingTag = listing.tags.some((tag) => activeFilters.has(tag));
-            const hasMatchingType = activeFilters.has(listing.type);
-            showByTagOrType = hasMatchingTag || hasMatchingType;
+            showByTag = listing.tags.some((tag) => activeFilters.has(tag));
         }
-        listing.element.style.display = showByState && showByTagOrType ? '' : 'none';
+        listing.element.style.display = showByState && showByTag ? '' : 'none';
     });
 }
 function handleUrlParams() {
@@ -144,6 +149,74 @@ function handleUrlParams() {
         }
     }
 }
+function updateDescriptions() {
+    listings.forEach((listing) => {
+        const descCell = listing.element.querySelector('.description-cell');
+        if (!descCell)
+            return;
+        const firstSentence = extractFirstSentence(listing.content);
+        descCell.textContent = firstSentence;
+    });
+}
+function extractFirstSentence(content) {
+    const trimmed = content.trim();
+    const match = trimmed.match(/^[^.!?]*[.!?]/);
+    if (match) {
+        return match[0].trim();
+    }
+    // Fallback: first 100 chars
+    if (trimmed.length > 100) {
+        return trimmed.substring(0, 100) + '...';
+    }
+    return trimmed;
+}
+function updateLocations() {
+    listings.forEach((listing) => {
+        const locationCell = listing.element.querySelector('.location-cell');
+        if (!locationCell)
+            return;
+        const nearestCity = findNearestCity(listing.cities);
+        if (nearestCity) {
+            locationCell.textContent = nearestCity;
+        }
+        else if (listing.cities.length > 0) {
+            locationCell.textContent = listing.cities[0];
+        }
+    });
+}
+function findNearestCity(cityNames) {
+    if (!selectedCity || cityNames.length === 0) {
+        return cityNames[0] || null;
+    }
+    let nearestCity = cityNames[0];
+    let minDistance = Infinity;
+    cityNames.forEach((cityName) => {
+        const city = cityMap.get(cityName);
+        if (city) {
+            const dist = haversineDistance(selectedCity.coordinates, city.coordinates);
+            if (dist < minDistance) {
+                minDistance = dist;
+                nearestCity = cityName;
+            }
+        }
+    });
+    return nearestCity;
+}
+function getMinDistance(listing) {
+    if (!selectedCity)
+        return Infinity;
+    let minDistance = Infinity;
+    listing.cities.forEach((cityName) => {
+        const city = cityMap.get(cityName);
+        if (city) {
+            const dist = haversineDistance(selectedCity.coordinates, city.coordinates);
+            if (dist < minDistance) {
+                minDistance = dist;
+            }
+        }
+    });
+    return minDistance;
+}
 function updateDistances() {
     listings.forEach((listing) => {
         const distanceEl = listing.element.querySelector('.distance');
@@ -155,7 +228,7 @@ function updateDistances() {
             return;
         }
         distanceEl.classList.remove('no-city');
-        const dist = haversineDistance(selectedCity.coordinates, listing.coordinates);
+        const dist = getMinDistance(listing);
         distanceEl.textContent = formatDistance(dist);
     });
 }
@@ -166,8 +239,8 @@ function sortByDistance() {
     if (!tbody)
         return;
     const sorted = [...listings].sort((a, b) => {
-        const distA = haversineDistance(selectedCity.coordinates, a.coordinates);
-        const distB = haversineDistance(selectedCity.coordinates, b.coordinates);
+        const distA = getMinDistance(a);
+        const distB = getMinDistance(b);
         return distA - distB;
     });
     sorted.forEach((listing) => {
@@ -189,6 +262,8 @@ function toRad(deg) {
     return deg * (Math.PI / 180);
 }
 function formatDistance(km) {
+    if (km === Infinity)
+        return '-';
     if (km < 1) {
         return '< 1 km';
     }

@@ -2,20 +2,18 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Type</th>
       <th>Location</th>
       <th>Distance</th>
-      <th>Date</th>
+      <th>Description</th>
       <th>Tags</th>
     </tr>
   </thead>
   <tbody>
     {% for listing in site.listings %}
     <tr class="listing-row"
-        data-coordinates="{{ listing.coordinates | jsonify }}"
+        data-cities="{{ listing.cities | jsonify }}"
         data-tags="{{ listing.tags | jsonify }}"
-        data-type="{{ listing.type }}"
-        data-state="{{ listing.state }}">
+        data-content="{{ listing.content | strip_html | escape }}">
       <td>
         {% if listing.url %}
           <a href="{{ listing.url }}" target="_blank" rel="noopener">{{ listing.title }}</a>
@@ -23,19 +21,9 @@
           {{ listing.title }}
         {% endif %}
       </td>
-      <td>
-        <span class="type-badge {{ listing.type }}">{{ listing.type }}</span>
-      </td>
-      <td>{{ listing.city }}, {{ listing.state }}</td>
+      <td class="location-cell">{{ listing.cities | first }}</td>
       <td><span class="distance no-city">-</span></td>
-      <td>
-        {% if listing.date %}
-          {{ listing.date | date: "%b %d, %Y" }}
-          {% if listing.end_date %} - {{ listing.end_date | date: "%b %d, %Y" }}{% endif %}
-        {% else %}
-          <span style="color: #999;">Ongoing</span>
-        {% endif %}
-      </td>
+      <td class="description-cell"></td>
       <td>
         <div class="listing-tags">
           {% for tag in listing.tags %}

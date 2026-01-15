@@ -1,13 +1,8 @@
 ---
 title: Hessen Games Conference
-type: event
 tags: [conference, networking]
-city: Frankfurt
-state: Hessen
-country: Germany
-coordinates: [50.1109, 8.6821]
-date: 2026-09-15
-end_date: 2026-09-16
+cities: [Frankfurt]
+last_updated: 2026-01-15
 url: https://example.com/hessen-games
 ---
 Annual game industry conference for the Hessen region.

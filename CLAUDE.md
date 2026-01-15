@@ -13,30 +13,29 @@ Build TypeScript before Jekyll for local development.
 
 ## Architecture
 
-Jekyll static site displaying local gamedev events and services, with TypeScript for interactive features.
+Jekyll static site displaying local gamedev events, with TypeScript for interactive features.
 
 ### Data Structure
-- `_listings/` - Jekyll collection of events/services (markdown with front matter)
+- `_listings/` - Jekyll collection of events (markdown with front matter)
 - `_data/cities.yml` - City coordinates for autocomplete and distance calculation
 
 ### Listing Front Matter
 ```yaml
 title: "Event Name"
-type: event | service
-tags: [jam, meetup, networking, coworking, etc.]
-city: Melbourne
-country: Australia
-coordinates: [-37.8136, 144.9631]  # lat, long
-date: 2026-03-15                    # optional for services
-end_date: 2026-03-17                # optional
+tags: [jam, meetup, conference, workshop, networking]
+cities: [Cologne, Frankfurt]  # supports multiple cities
+last_updated: 2026-01-15      # not displayed, for maintenance
 url: https://example.com
+---
+First sentence shown in table. Rest of description here.
 ```
 
 ### TypeScript (`src/main.ts`)
 - City autocomplete filtering `_data/cities.yml`
-- Distance calculation (haversine formula)
-- Tag/type filtering
+- Multi-city distance calculation (uses nearest city)
+- Tag and state filtering
 - URL parameter handling (`?city=Melbourne`)
+- Content truncation (first sentence for table display)
 
 Output goes to `assets/js/main.js` for browser use.
 

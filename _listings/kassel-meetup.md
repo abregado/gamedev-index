@@ -1,12 +1,8 @@
 ---
 title: Kassel Indie Meetup
-type: event
-tags: [meetup, indie]
-city: Kassel
-state: Hessen
-country: Germany
-coordinates: [51.3127, 9.4797]
-date: 2026-02-22
+tags: [meetup]
+cities: [Kassel]
+last_updated: 2026-01-15
 url: https://example.com/kassel-indie
 ---
 Casual meetup for indie developers in North Hessen.

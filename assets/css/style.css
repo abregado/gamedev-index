@@ -161,24 +161,11 @@ h1 {
   text-decoration: underline;
 }
 
-/* Type badge */
-.type-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.type-badge.event {
-  background: #e3f2fd;
-  color: #1565c0;
-}
-
-.type-badge.service {
-  background: #e8f5e9;
-  color: #2e7d32;
+/* Description cell */
+.description-cell {
+  color: #666;
+  font-size: 0.875rem;
+  max-width: 300px;
 }
 
 /* Tags in table */
