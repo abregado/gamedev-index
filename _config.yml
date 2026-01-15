@@ -1,0 +1,22 @@
+title: Event Index
+description: Game development event index
+baseurl: ""
+url: ""
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - package.json
+  - package-lock.json
+  - tsconfig.json
+  - src
+  - dist
+  - "*.ts"
+  - README.md
+  - CLAUDE.md
