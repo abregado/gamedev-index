@@ -4,3 +4,30 @@ title: Event Index
 ---
 
 <h1>Event Index</h1>
+
+<div class="controls">
+  <div class="city-selector">
+    <input type="text" id="city-input" placeholder="Search for your city..." autocomplete="off">
+    <div id="city-suggestions" class="city-suggestions"></div>
+  </div>
+
+  <div class="tag-filters">
+    <span class="filter-group">
+      <button class="tag-filter" data-tag="NRW" data-filter-type="state">NRW</button>
+      <button class="tag-filter" data-tag="Hessen" data-filter-type="state">Hessen</button>
+    </span>
+    <span class="filter-group">
+      <button class="tag-filter" data-tag="event">Events</button>
+      <button class="tag-filter" data-tag="service">Services</button>
+    </span>
+    <span class="filter-group">
+      <button class="tag-filter" data-tag="jam">Jams</button>
+      <button class="tag-filter" data-tag="meetup">Meetups</button>
+      <button class="tag-filter" data-tag="workshop">Workshops</button>
+      <button class="tag-filter" data-tag="conference">Conferences</button>
+      <button class="tag-filter" data-tag="coworking">Coworking</button>
+    </span>
+  </div>
+</div>
+
+{% include listing-table.html %}

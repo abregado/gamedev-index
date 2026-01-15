@@ -1,0 +1,131 @@
+# North Rhine-Westphalia (NRW)
+- name: Cologne
+  state: NRW
+  country: Germany
+  coordinates: [50.9375, 6.9603]
+
+- name: Düsseldorf
+  state: NRW
+  country: Germany
+  coordinates: [51.2277, 6.7735]
+
+- name: Dortmund
+  state: NRW
+  country: Germany
+  coordinates: [51.5136, 7.4653]
+
+- name: Essen
+  state: NRW
+  country: Germany
+  coordinates: [51.4556, 7.0116]
+
+- name: Duisburg
+  state: NRW
+  country: Germany
+  coordinates: [51.4344, 6.7623]
+
+- name: Bochum
+  state: NRW
+  country: Germany
+  coordinates: [51.4818, 7.2162]
+
+- name: Wuppertal
+  state: NRW
+  country: Germany
+  coordinates: [51.2562, 7.1508]
+
+- name: Bielefeld
+  state: NRW
+  country: Germany
+  coordinates: [52.0302, 8.5325]
+
+- name: Bonn
+  state: NRW
+  country: Germany
+  coordinates: [50.7374, 7.0982]
+
+- name: Münster
+  state: NRW
+  country: Germany
+  coordinates: [51.9607, 7.6261]
+
+- name: Aachen
+  state: NRW
+  country: Germany
+  coordinates: [50.7753, 6.0839]
+
+- name: Krefeld
+  state: NRW
+  country: Germany
+  coordinates: [51.3388, 6.5853]
+
+- name: Oberhausen
+  state: NRW
+  country: Germany
+  coordinates: [51.4963, 6.8638]
+
+- name: Gelsenkirchen
+  state: NRW
+  country: Germany
+  coordinates: [51.5177, 7.0857]
+
+- name: Mönchengladbach
+  state: NRW
+  country: Germany
+  coordinates: [51.1805, 6.4428]
+
+# Hessen
+- name: Frankfurt
+  state: Hessen
+  country: Germany
+  coordinates: [50.1109, 8.6821]
+
+- name: Wiesbaden
+  state: Hessen
+  country: Germany
+  coordinates: [50.0782, 8.2398]
+
+- name: Kassel
+  state: Hessen
+  country: Germany
+  coordinates: [51.3127, 9.4797]
+
+- name: Darmstadt
+  state: Hessen
+  country: Germany
+  coordinates: [49.8728, 8.6512]
+
+- name: Offenbach
+  state: Hessen
+  country: Germany
+  coordinates: [50.0956, 8.7761]
+
+- name: Hanau
+  state: Hessen
+  country: Germany
+  coordinates: [50.1337, 8.9167]
+
+- name: Gießen
+  state: Hessen
+  country: Germany
+  coordinates: [50.5841, 8.6784]
+
+- name: Marburg
+  state: Hessen
+  country: Germany
+  coordinates: [50.8021, 8.7668]
+
+- name: Fulda
+  state: Hessen
+  country: Germany
+  coordinates: [50.5528, 9.6756]
+
+- name: Bad Homburg
+  state: Hessen
+  country: Germany
+  coordinates: [50.2267, 8.6181]
+
+- name: Rüsselsheim
+  state: Hessen
+  country: Germany
+  coordinates: [49.9953, 8.4113]
