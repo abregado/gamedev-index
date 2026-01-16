@@ -48,6 +48,7 @@ function initListings() {
         const tagsAttr = item.dataset.tags;
         const contentAttr = item.dataset.content;
         const titleAttr = item.dataset.title;
+        const urlAttr = item.dataset.url;
         listings.push({
             element: item,
             cities: citiesAttr ? JSON.parse(citiesAttr) : [],
@@ -55,6 +56,12 @@ function initListings() {
             content: contentAttr || '',
             title: titleAttr || '',
         });
+        // Make entire listing clickable
+        if (urlAttr) {
+            item.addEventListener('click', () => {
+                window.open(urlAttr, '_blank', 'noopener');
+            });
+        }
     });
 }
 // Generate a consistent hash from a string
@@ -133,10 +140,7 @@ function renderTagFilters(tags) {
     toggleButton.addEventListener('click', () => {
         expandedFilters = !expandedFilters;
         expandedContainer.classList.toggle('active', expandedFilters);
-        const toggleText = toggleButton.querySelector('.toggle-text');
-        if (toggleText) {
-            toggleText.textContent = expandedFilters ? 'Show less' : 'Show more';
-        }
+        toggleButton.classList.toggle('expanded', expandedFilters);
     });
 }
 function createTagButton(tag) {

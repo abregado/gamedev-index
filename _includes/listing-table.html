@@ -4,7 +4,8 @@
        data-cities="{{ listing.cities | jsonify | escape }}"
        data-tags="{{ listing.tags | jsonify | escape }}"
        data-content="{{ listing.content | strip_html | escape }}"
-       data-title="{{ listing.title | downcase }}">
+       data-title="{{ listing.title | downcase }}"
+       data-url="{{ listing.url }}">
     <div class="listing-content">
       <div class="listing-line-1">
         <span class="listing-name">

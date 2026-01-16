@@ -1,7 +1,7 @@
 ---
-title: Aachen Game Jam
-tags: [jam]
-cities: [Aachen]
+title: Aachen+Frankfurt Game Jam
+tags: [jam,cheese,love,doors,pizza,trees,roads,freedom]
+cities: [Aachen, Frankfurt]
 last_updated: 2026-01-15
 url: https://example.com/aachen-jam
 ---
