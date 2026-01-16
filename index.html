@@ -3,14 +3,27 @@ layout: default
 title: Event Index
 ---
 
-<header class="site-header" id="site-header">
-  <div class="header-content">
-    <h1 class="site-title">Event Index</h1>
-    <p class="site-subtitle">Find gamedev events near you</p>
+<!-- Spacer: prevents header from expanding when scrolling up to filters -->
+<div class="header-spacer" id="header-spacer"></div>
+
+<!-- Hero Header: visible at top, fades out on scroll -->
+<header class="header-hero" id="header-hero">
+  <h1 class="header-hero-title">Event Index</h1>
+  <p class="header-hero-subtitle">Find gamedev events near you</p>
+  <div class="city-selector">
+    <input type="text" class="city-input" placeholder="Enter your city..." autocomplete="off">
+    <div class="city-suggestions"></div>
+  </div>
+</header>
+
+<!-- Compact Header: sticky, fades in on scroll -->
+<header class="header-compact" id="header-compact">
+  <div class="header-compact-content">
     <div class="city-selector">
-      <input type="text" id="city-input" placeholder="Enter your city..." autocomplete="off">
-      <div id="city-suggestions" class="city-suggestions"></div>
+      <input type="text" class="city-input" placeholder="Enter your city..." autocomplete="off">
+      <div class="city-suggestions"></div>
     </div>
+    <h1 class="header-compact-title">Event Index</h1>
   </div>
 </header>
 

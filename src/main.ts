@@ -240,63 +240,82 @@ function applyTagColors(): void {
 }
 
 function initCitySelector(): void {
-  const input = document.getElementById('city-input') as HTMLInputElement;
-  const suggestions = document.getElementById('city-suggestions');
+  // Get all city inputs and their suggestion containers
+  const citySelectors = document.querySelectorAll('.city-selector');
 
-  if (!input || !suggestions) return;
+  citySelectors.forEach((selector) => {
+    const input = selector.querySelector('.city-input') as HTMLInputElement;
+    const suggestions = selector.querySelector(
+      '.city-suggestions'
+    ) as HTMLElement;
 
-  input.addEventListener('input', () => {
-    const query = input.value.toLowerCase().trim();
-    if (query.length < 1) {
-      suggestions.classList.remove('active');
-      return;
-    }
+    if (!input || !suggestions) return;
 
-    const matches = cities.filter(
-      (city) =>
-        city.name.toLowerCase().includes(query) ||
-        city.state.toLowerCase().includes(query)
-    );
+    input.addEventListener('input', () => {
+      const query = input.value.toLowerCase().trim();
 
-    if (matches.length === 0) {
-      suggestions.classList.remove('active');
-      return;
-    }
+      // Sync all inputs
+      syncCityInputs(input.value);
 
-    suggestions.innerHTML = matches
-      .slice(0, 10)
-      .map(
-        (city) =>
-          `<div class="city-suggestion" data-city="${city.name}">${city.name}, ${city.state}</div>`
-      )
-      .join('');
-    suggestions.classList.add('active');
-
-    suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
-      el.addEventListener('click', () => {
-        const cityName = (el as HTMLElement).dataset.city;
-        selectCity(cityName || '');
-        input.value = cityName || '';
+      if (query.length < 1) {
         suggestions.classList.remove('active');
+        return;
+      }
+
+      const matches = cities.filter(
+        (city) =>
+          city.name.toLowerCase().includes(query) ||
+          city.state.toLowerCase().includes(query)
+      );
+
+      if (matches.length === 0) {
+        suggestions.classList.remove('active');
+        return;
+      }
+
+      suggestions.innerHTML = matches
+        .slice(0, 10)
+        .map(
+          (city) =>
+            `<div class="city-suggestion" data-city="${city.name}">${city.name}, ${city.state}</div>`
+        )
+        .join('');
+      suggestions.classList.add('active');
+
+      suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
+        el.addEventListener('click', () => {
+          const cityName = (el as HTMLElement).dataset.city;
+          selectCity(cityName || '');
+          syncCityInputs(cityName || '');
+          suggestions.classList.remove('active');
+        });
       });
     });
-  });
 
-  input.addEventListener('blur', () => {
-    setTimeout(() => suggestions.classList.remove('active'), 200);
-  });
+    input.addEventListener('blur', () => {
+      setTimeout(() => suggestions.classList.remove('active'), 200);
+    });
 
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const firstSuggestion = suggestions.querySelector(
-        '.city-suggestion'
-      ) as HTMLElement;
-      if (firstSuggestion) {
-        const cityName = firstSuggestion.dataset.city;
-        selectCity(cityName || '');
-        input.value = cityName || '';
-        suggestions.classList.remove('active');
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const firstSuggestion = suggestions.querySelector(
+          '.city-suggestion'
+        ) as HTMLElement;
+        if (firstSuggestion) {
+          const cityName = firstSuggestion.dataset.city;
+          selectCity(cityName || '');
+          syncCityInputs(cityName || '');
+          suggestions.classList.remove('active');
+        }
       }
+    });
+  });
+}
+
+function syncCityInputs(value: string): void {
+  document.querySelectorAll<HTMLInputElement>('.city-input').forEach((input) => {
+    if (input.value !== value) {
+      input.value = value;
     }
   });
 }
@@ -314,20 +333,14 @@ function selectCity(cityName: string): void {
 }
 
 function initHeaderBehavior(): void {
-  const header = document.getElementById('site-header');
-  const input = document.getElementById('city-input') as HTMLInputElement;
+  const heroHeader = document.getElementById('header-hero');
+  const compactHeader = document.getElementById('header-compact');
 
-  if (!header || !input) return;
+  if (!heroHeader || !compactHeader) return;
 
   // Update on scroll
   window.addEventListener('scroll', () => {
     updateHeaderState();
-  });
-
-  // Update when input changes (for clearing the field)
-  input.addEventListener('input', () => {
-    // Small delay to allow for city selection to complete
-    setTimeout(updateHeaderState, 50);
   });
 
   // Initial state
@@ -335,22 +348,33 @@ function initHeaderBehavior(): void {
 }
 
 function updateHeaderState(): void {
-  const header = document.getElementById('site-header');
-  const input = document.getElementById('city-input') as HTMLInputElement;
+  const heroHeader = document.getElementById('header-hero');
+  const compactHeader = document.getElementById('header-compact');
+  const spacer = document.getElementById('header-spacer');
 
-  if (!header || !input) return;
+  if (!heroHeader || !compactHeader || !spacer) return;
 
-  const isCompact = header.classList.contains('compact');
+  const isCompact = compactHeader.classList.contains('visible');
   const hasCitySelected = selectedCity !== null;
 
-  // Hysteresis: require scrolling past 100px to compact, but only 20px to expand
+  // Hysteresis: require scrolling past 100px to show compact, but only 20px to show hero
   const compactThreshold = isCompact ? 20 : 100;
-  const isScrolledDown = window.scrollY > compactThreshold;
+  const shouldShowCompact = window.scrollY > compactThreshold || hasCitySelected;
 
-  if (isScrolledDown || hasCitySelected) {
-    header.classList.add('compact');
+  if (shouldShowCompact) {
+    heroHeader.classList.add('hidden');
+    compactHeader.classList.add('visible');
+    // Only show spacer when compact is due to scroll, not city selection
+    // This prevents gap at top when city is selected at scroll position 0
+    if (!hasCitySelected) {
+      spacer.classList.add('visible');
+    } else {
+      spacer.classList.remove('visible');
+    }
   } else {
-    header.classList.remove('compact');
+    heroHeader.classList.remove('hidden');
+    compactHeader.classList.remove('visible');
+    spacer.classList.remove('visible');
   }
 }
 
@@ -404,11 +428,8 @@ function handleUrlParams(): void {
   const cityParam = params.get('city');
 
   if (cityParam) {
-    const input = document.getElementById('city-input') as HTMLInputElement;
-    if (input) {
-      input.value = cityParam;
-      selectCity(cityParam);
-    }
+    syncCityInputs(cityParam);
+    selectCity(cityParam);
   }
 }
 

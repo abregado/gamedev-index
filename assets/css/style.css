@@ -13,96 +13,112 @@ body {
   background: #fafafa;
 }
 
-/* Site Header - Hero State (default) */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
+/* Header spacer - prevents hero from reappearing when scrolling to filters */
+.header-spacer {
+  height: 0;
+}
+
+.header-spacer.visible {
+  height: 100px;
+}
+
+/* Hero Header - Full size at top of page */
+.header-hero {
   text-align: center;
   padding: 3rem 1rem;
-  margin: 0 -2rem 2rem -2rem;
+  margin: 0 -2rem 0 -2rem;
   background: #fafafa;
-  transition: all 0.3s ease;
+  transition: opacity 0.25s ease;
 }
 
-.header-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
+.header-hero.hidden {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  left: 0;
 }
 
-.site-title {
+.header-hero-title {
   font-size: 2.5rem;
   font-weight: 600;
   margin: 0;
-  transition: all 0.3s ease;
 }
 
-.site-subtitle {
+.header-hero-subtitle {
   font-size: 1.125rem;
   color: #666;
-  margin: 0 0 1rem 0;
-  transition: all 0.3s ease;
+  margin: 0.5rem 0 1rem 0;
 }
 
-.site-header .city-selector {
+.header-hero .city-selector {
   width: 100%;
   max-width: 400px;
-  transition: all 0.3s ease;
+  margin: 0 auto;
 }
 
-.site-header .city-selector input {
+.header-hero .city-selector input {
   padding: 1rem 1.25rem;
   font-size: 1.125rem;
   text-align: center;
   border: 2px solid #ddd;
   border-radius: 8px;
-  transition: all 0.3s ease;
 }
 
-.site-header .city-selector input:focus {
+.header-hero .city-selector input:focus {
   border-color: #0066cc;
   box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
-/* Site Header - Compact State */
-.site-header.compact {
+/* Compact Header - Sticky bar */
+.header-compact {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   padding: 0.75rem 2rem;
   margin: 0 -2rem 1.5rem -2rem;
   background: #fff;
-  border-radius: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
 }
 
-.site-header.compact .header-content {
+.header-compact.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.header-compact-content {
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
 }
 
-.site-header.compact .site-title {
+.header-compact-title {
   font-size: 1.25rem;
-  order: 2;
+  font-weight: 600;
+  margin: 0;
 }
 
-.site-header.compact .site-subtitle {
-  display: none;
-}
-
-.site-header.compact .city-selector {
+.header-compact .city-selector {
   max-width: 280px;
-  order: 1;
+  flex: 1;
 }
 
-.site-header.compact .city-selector input {
+.header-compact .city-selector input {
   padding: 0.5rem 0.75rem;
   font-size: 0.9rem;
   text-align: left;
-  border-width: 1px;
+  border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+.header-compact .city-selector input:focus {
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
 }
 
 /* City selector base styles */
@@ -410,33 +426,33 @@ body {
     padding-top: 0.5rem;
   }
 
-  .site-header {
+  .header-hero {
     padding: 2rem 1rem;
-    margin: 0 -1rem 1.5rem -1rem;
+    margin: 0 -1rem 0 -1rem;
   }
 
-  .site-title {
+  .header-hero-title {
     font-size: 2rem;
   }
 
-  .site-subtitle {
+  .header-hero-subtitle {
     font-size: 1rem;
   }
 
-  .site-header.compact {
+  .header-compact {
     padding: 0.5rem 1rem;
     margin: 0 -1rem 1rem -1rem;
   }
 
-  .site-header.compact .header-content {
+  .header-compact-content {
     flex-wrap: wrap;
   }
 
-  .site-header.compact .site-title {
+  .header-compact-title {
     font-size: 1rem;
   }
 
-  .site-header.compact .city-selector {
+  .header-compact .city-selector {
     max-width: none;
     flex: 1;
     min-width: 150px;
