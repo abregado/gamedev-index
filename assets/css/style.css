@@ -9,42 +9,111 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  padding-top: 1rem;
   background: #fafafa;
 }
 
-h1 {
-  font-weight: 600;
+/* Site Header - Hero State (default) */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  text-align: center;
+  padding: 3rem 1rem;
   margin-bottom: 2rem;
+  background: #fafafa;
+  transition: all 0.3s ease;
 }
 
-/* Controls */
-.controls {
+.header-content {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
 }
 
+.site-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+
+.site-subtitle {
+  font-size: 1.125rem;
+  color: #666;
+  margin: 0 0 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.site-header .city-selector {
+  width: 100%;
+  max-width: 400px;
+  transition: all 0.3s ease;
+}
+
+.site-header .city-selector input {
+  padding: 1rem 1.25rem;
+  font-size: 1.125rem;
+  text-align: center;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.site-header .city-selector input:focus {
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+/* Site Header - Compact State */
+.site-header.compact {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.site-header.compact .header-content {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.site-header.compact .site-title {
+  font-size: 1.25rem;
+  order: 2;
+}
+
+.site-header.compact .site-subtitle {
+  display: none;
+}
+
+.site-header.compact .city-selector {
+  max-width: 280px;
+  order: 1;
+}
+
+.site-header.compact .city-selector input {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  text-align: left;
+  border-width: 1px;
+  border-radius: 4px;
+}
+
+/* City selector base styles */
 .city-selector {
   position: relative;
-  flex: 1;
-  min-width: 250px;
-  max-width: 400px;
 }
 
 .city-selector input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
   background: #fff;
-}
-
-.city-selector input:focus {
   outline: none;
-  border-color: #666;
 }
 
 .city-suggestions {
@@ -69,6 +138,7 @@ h1 {
 .city-suggestion {
   padding: 0.5rem 1rem;
   cursor: pointer;
+  text-align: left;
 }
 
 .city-suggestion:hover {
@@ -337,14 +407,37 @@ h1 {
 @media (max-width: 768px) {
   body {
     padding: 1rem;
+    padding-top: 0.5rem;
   }
 
-  .controls {
-    flex-direction: column;
+  .site-header {
+    padding: 2rem 0.5rem;
   }
 
-  .city-selector {
+  .site-title {
+    font-size: 2rem;
+  }
+
+  .site-subtitle {
+    font-size: 1rem;
+  }
+
+  .site-header.compact {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .site-header.compact .header-content {
+    flex-wrap: wrap;
+  }
+
+  .site-header.compact .site-title {
+    font-size: 1rem;
+  }
+
+  .site-header.compact .city-selector {
     max-width: none;
+    flex: 1;
+    min-width: 150px;
   }
 
   .tag-filters-content {

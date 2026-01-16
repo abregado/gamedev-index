@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initListings();
   initTagFilters();
   initCitySelector();
+  initHeaderBehavior();
   handleUrlParams();
   updateDescriptions();
   applyTagColors();
@@ -304,10 +305,48 @@ function selectCity(cityName: string): void {
   selectedCity = cityMap.get(cityName) || null;
   updateLocations();
   updateDistances();
+  updateHeaderState();
   if (selectedCity) {
     sortByDistance();
   } else {
     sortAlphabetically();
+  }
+}
+
+function initHeaderBehavior(): void {
+  const header = document.getElementById('site-header');
+  const input = document.getElementById('city-input') as HTMLInputElement;
+
+  if (!header || !input) return;
+
+  // Update on scroll
+  window.addEventListener('scroll', () => {
+    updateHeaderState();
+  });
+
+  // Update when input changes (for clearing the field)
+  input.addEventListener('input', () => {
+    // Small delay to allow for city selection to complete
+    setTimeout(updateHeaderState, 50);
+  });
+
+  // Initial state
+  updateHeaderState();
+}
+
+function updateHeaderState(): void {
+  const header = document.getElementById('site-header');
+  const input = document.getElementById('city-input') as HTMLInputElement;
+
+  if (!header || !input) return;
+
+  const isScrolledDown = window.scrollY > 50;
+  const hasCitySelected = selectedCity !== null;
+
+  if (isScrolledDown || hasCitySelected) {
+    header.classList.add('compact');
+  } else {
+    header.classList.remove('compact');
   }
 }
 
