@@ -20,7 +20,7 @@ body {
   z-index: 50;
   text-align: center;
   padding: 3rem 1rem;
-  margin-bottom: 2rem;
+  margin: 0 -2rem 2rem -2rem;
   background: #fafafa;
   transition: all 0.3s ease;
 }
@@ -69,10 +69,10 @@ body {
 
 /* Site Header - Compact State */
 .site-header.compact {
-  padding: 0.75rem 1rem;
-  margin-bottom: 1.5rem;
+  padding: 0.75rem 2rem;
+  margin: 0 -2rem 1.5rem -2rem;
   background: #fff;
-  border-radius: 8px;
+  border-radius: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -411,7 +411,8 @@ body {
   }
 
   .site-header {
-    padding: 2rem 0.5rem;
+    padding: 2rem 1rem;
+    margin: 0 -1rem 1.5rem -1rem;
   }
 
   .site-title {
@@ -423,7 +424,8 @@ body {
   }
 
   .site-header.compact {
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 1rem;
+    margin: 0 -1rem 1rem -1rem;
   }
 
   .site-header.compact .header-content {

@@ -340,8 +340,12 @@ function updateHeaderState(): void {
 
   if (!header || !input) return;
 
-  const isScrolledDown = window.scrollY > 50;
+  const isCompact = header.classList.contains('compact');
   const hasCitySelected = selectedCity !== null;
+
+  // Hysteresis: require scrolling past 100px to compact, but only 20px to expand
+  const compactThreshold = isCompact ? 20 : 100;
+  const isScrolledDown = window.scrollY > compactThreshold;
 
   if (isScrolledDown || hasCitySelected) {
     header.classList.add('compact');

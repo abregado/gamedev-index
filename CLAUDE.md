@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Before starting work, read `DEVELOPMENT.md` for detailed documentation on the project architecture, data flow, and implementation details.**
+
 ## Build Commands
 
 - **Install dependencies**: `npm install` and `bundle install`
