@@ -10,20 +10,19 @@ title: Event Index
     <input type="text" id="city-input" placeholder="Search for your city..." autocomplete="off">
     <div id="city-suggestions" class="city-suggestions"></div>
   </div>
+</div>
 
-  <div class="tag-filters">
-    <span class="filter-group">
-      <button class="tag-filter" data-tag="NRW" data-filter-type="state">NRW</button>
-      <button class="tag-filter" data-tag="Hessen" data-filter-type="state">Hessen</button>
-    </span>
-    <span class="filter-group">
-      <button class="tag-filter" data-tag="jam">Jams</button>
-      <button class="tag-filter" data-tag="meetup">Meetups</button>
-      <button class="tag-filter" data-tag="workshop">Workshops</button>
-      <button class="tag-filter" data-tag="conference">Conferences</button>
-      <button class="tag-filter" data-tag="networking">Networking</button>
-    </span>
-  </div>
+<div class="tag-filters">
+  <div class="tag-filters-main" id="tag-filters-main"></div>
+  <div class="tag-filters-expanded" id="tag-filters-expanded"></div>
+  <button class="tag-filters-toggle" id="tag-filters-toggle" style="display: none;">
+    <span class="toggle-text">Show more</span>
+  </button>
+</div>
+
+<div class="empty-message" id="empty-message" style="display: none;">
+  <p>No events match your current filters.</p>
+  <p class="empty-hint">Try setting some tags to "Allowed" or removing "Disallowed" tags.</p>
 </div>
 
 {% include listing-table.html %}

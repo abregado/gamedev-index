@@ -1,17 +1,35 @@
 "use strict";
+// Color palette for tags - visually distinct, accessible colors
+const TAG_COLORS = [
+    '#2563eb', // blue
+    '#7c3aed', // violet
+    '#db2777', // pink
+    '#ea580c', // orange
+    '#16a34a', // green
+    '#0891b2', // cyan
+    '#4f46e5', // indigo
+    '#c026d3', // fuchsia
+    '#65a30d', // lime
+    '#0d9488', // teal
+    '#e11d48', // rose
+    '#9333ea', // purple
+];
 let cities = [];
 let cityMap = new Map();
 let listings = [];
 let selectedCity = null;
-let activeFilters = new Set();
-let activeStateFilters = new Set();
+let tagInfoMap = new Map();
+let expandedFilters = false;
+const MAX_VISIBLE_TAGS = 10;
 document.addEventListener('DOMContentLoaded', () => {
     loadCities();
     initListings();
-    initCitySelector();
     initTagFilters();
+    initCitySelector();
     handleUrlParams();
     updateDescriptions();
+    applyTagColors();
+    applyFilters();
     sortAlphabetically();
 });
 function loadCities() {
@@ -36,6 +54,135 @@ function initListings() {
             tags: tagsAttr ? JSON.parse(tagsAttr) : [],
             content: contentAttr || '',
             title: titleAttr || '',
+        });
+    });
+}
+// Generate a consistent hash from a string
+function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash);
+}
+// Get a consistent color for a tag name
+function getTagColor(tagName) {
+    const hash = hashString(tagName);
+    return TAG_COLORS[hash % TAG_COLORS.length];
+}
+function initTagFilters() {
+    // Collect all tags and count occurrences
+    const tagCounts = new Map();
+    listings.forEach((listing) => {
+        listing.tags.forEach((tag) => {
+            tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+        });
+    });
+    // Sort by count descending
+    const sortedTags = Array.from(tagCounts.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, count]) => ({
+        name,
+        count,
+        state: 'allowed',
+        color: getTagColor(name),
+    }));
+    // Store in map
+    sortedTags.forEach((tag) => {
+        tagInfoMap.set(tag.name, tag);
+    });
+    // Render filter buttons
+    renderTagFilters(sortedTags);
+}
+function renderTagFilters(tags) {
+    const mainContainer = document.getElementById('tag-filters-main');
+    const expandedContainer = document.getElementById('tag-filters-expanded');
+    const toggleButton = document.getElementById('tag-filters-toggle');
+    if (!mainContainer || !expandedContainer || !toggleButton)
+        return;
+    const mainTags = tags.slice(0, MAX_VISIBLE_TAGS);
+    const extraTags = tags.slice(MAX_VISIBLE_TAGS);
+    // Render main tags
+    mainContainer.innerHTML = mainTags
+        .map((tag) => createTagButton(tag))
+        .join('');
+    // Render extra tags
+    if (extraTags.length > 0) {
+        expandedContainer.innerHTML = extraTags
+            .map((tag) => createTagButton(tag))
+            .join('');
+        toggleButton.style.display = '';
+    }
+    else {
+        toggleButton.style.display = 'none';
+    }
+    // Add click handlers
+    document.querySelectorAll('.tag-filter').forEach((el) => {
+        el.addEventListener('click', () => {
+            const tagName = el.dataset.tag;
+            if (tagName) {
+                cycleTagState(tagName);
+                updateTagButton(el, tagName);
+                applyFilters();
+            }
+        });
+    });
+    // Toggle button handler
+    toggleButton.addEventListener('click', () => {
+        expandedFilters = !expandedFilters;
+        expandedContainer.classList.toggle('active', expandedFilters);
+        const toggleText = toggleButton.querySelector('.toggle-text');
+        if (toggleText) {
+            toggleText.textContent = expandedFilters ? 'Show less' : 'Show more';
+        }
+    });
+}
+function createTagButton(tag) {
+    const style = tag.state === 'allowed'
+        ? `background-color: ${tag.color}; border-color: ${tag.color};`
+        : '';
+    return `<button class="tag-filter" data-tag="${tag.name}" data-state="${tag.state}" style="${style}">
+    <span class="tag-icon"></span>
+    <span class="tag-name">${tag.name}</span>
+  </button>`;
+}
+function cycleTagState(tagName) {
+    const tag = tagInfoMap.get(tagName);
+    if (!tag)
+        return;
+    // Cycle: allowed → ignored → disallowed → allowed
+    const nextState = {
+        allowed: 'ignored',
+        ignored: 'disallowed',
+        disallowed: 'allowed',
+    };
+    tag.state = nextState[tag.state];
+}
+function updateTagButton(button, tagName) {
+    const tag = tagInfoMap.get(tagName);
+    if (!tag)
+        return;
+    button.dataset.state = tag.state;
+    if (tag.state === 'allowed') {
+        button.style.backgroundColor = tag.color;
+        button.style.borderColor = tag.color;
+    }
+    else {
+        button.style.backgroundColor = '';
+        button.style.borderColor = '';
+    }
+}
+function applyTagColors() {
+    listings.forEach((listing) => {
+        const tagElements = listing.element.querySelectorAll('.listing-tag');
+        listing.tags.forEach((tagName, index) => {
+            const tagEl = tagElements[index];
+            if (tagEl) {
+                const color = getTagColor(tagName);
+                tagEl.style.backgroundColor = color;
+            }
         });
     });
 }
@@ -96,55 +243,42 @@ function selectCity(cityName) {
         sortAlphabetically();
     }
 }
-function initTagFilters() {
-    const filters = document.querySelectorAll('.tag-filter');
-    filters.forEach((filter) => {
-        filter.addEventListener('click', () => {
-            const tag = filter.dataset.tag;
-            const filterType = filter.dataset.filterType;
-            if (!tag)
-                return;
-            if (filterType === 'state') {
-                if (activeStateFilters.has(tag)) {
-                    activeStateFilters.delete(tag);
-                    filter.classList.remove('active');
-                }
-                else {
-                    activeStateFilters.add(tag);
-                    filter.classList.add('active');
-                }
-            }
-            else {
-                if (activeFilters.has(tag)) {
-                    activeFilters.delete(tag);
-                    filter.classList.remove('active');
-                }
-                else {
-                    activeFilters.add(tag);
-                    filter.classList.add('active');
-                }
-            }
-            applyFilters();
-        });
-    });
-}
 function applyFilters() {
-    listings.forEach((listing) => {
-        let showByState = true;
-        let showByTag = true;
-        // State filter - check if any of the listing's cities are in the selected states
-        if (activeStateFilters.size > 0) {
-            showByState = listing.cities.some((cityName) => {
-                const city = cityMap.get(cityName);
-                return city && activeStateFilters.has(city.state);
-            });
+    const allowedTags = new Set();
+    const disallowedTags = new Set();
+    tagInfoMap.forEach((tag) => {
+        if (tag.state === 'allowed') {
+            allowedTags.add(tag.name);
         }
-        // Tag filter
-        if (activeFilters.size > 0) {
-            showByTag = listing.tags.some((tag) => activeFilters.has(tag));
+        else if (tag.state === 'disallowed') {
+            disallowedTags.add(tag.name);
         }
-        listing.element.style.display = showByState && showByTag ? '' : 'none';
     });
+    let visibleCount = 0;
+    listings.forEach((listing) => {
+        // Check if any tag is disallowed
+        const hasDisallowed = listing.tags.some((tag) => disallowedTags.has(tag));
+        // Check if any tag is allowed (only matters if there are allowed tags)
+        const hasAllowed = allowedTags.size === 0 || listing.tags.some((tag) => allowedTags.has(tag));
+        const visible = !hasDisallowed && hasAllowed;
+        listing.element.style.display = visible ? '' : 'none';
+        if (visible) {
+            visibleCount++;
+        }
+    });
+    // Show/hide empty message
+    const emptyMessage = document.getElementById('empty-message');
+    const listingsContainer = document.querySelector('.listings');
+    if (emptyMessage && listingsContainer) {
+        if (visibleCount === 0) {
+            emptyMessage.style.display = '';
+            listingsContainer.style.display = 'none';
+        }
+        else {
+            emptyMessage.style.display = 'none';
+            listingsContainer.style.display = '';
+        }
+    }
 }
 function handleUrlParams() {
     const params = new URLSearchParams(window.location.search);
@@ -172,7 +306,6 @@ function extractFirstSentence(content) {
     if (match) {
         return match[0].trim();
     }
-    // Fallback: first 100 chars
     if (trimmed.length > 100) {
         return trimmed.substring(0, 100) + '...';
     }
