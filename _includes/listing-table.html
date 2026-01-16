@@ -11,8 +11,8 @@
   <tbody>
     {% for listing in site.listings %}
     <tr class="listing-row"
-        data-cities="{{ listing.cities | jsonify }}"
-        data-tags="{{ listing.tags | jsonify }}"
+        data-cities="{{ listing.cities | jsonify | escape }}"
+        data-tags="{{ listing.tags | jsonify | escape }}"
         data-content="{{ listing.content | strip_html | escape }}">
       <td>
         {% if listing.url %}
