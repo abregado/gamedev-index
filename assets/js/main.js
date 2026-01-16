@@ -49,7 +49,7 @@ function initListings() {
         const tagsAttr = item.dataset.tags;
         const contentAttr = item.dataset.content;
         const titleAttr = item.dataset.title;
-        const urlAttr = item.dataset.url;
+        const eventUrl = item.dataset.eventUrl;
         listings.push({
             element: item,
             cities: citiesAttr ? JSON.parse(citiesAttr) : [],
@@ -57,10 +57,10 @@ function initListings() {
             content: contentAttr || '',
             title: titleAttr || '',
         });
-        // Make entire listing clickable
-        if (urlAttr) {
+        // Make entire listing clickable - navigate to event page
+        if (eventUrl) {
             item.addEventListener('click', () => {
-                window.open(urlAttr, '_blank', 'noopener');
+                window.location.href = eventUrl;
             });
         }
     });

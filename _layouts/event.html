@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} - {{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  <article class="event-page">
+    <nav class="event-nav">
+      <a href="{{ '/' | relative_url }}" class="back-link">&larr; Back to Event Index</a>
+    </nav>
+
+    <header class="event-header">
+      <h1 class="event-title">{{ page.title }}</h1>
+
+      <div class="event-meta">
+        <div class="event-cities">
+          {% for city in page.cities %}
+            <span class="event-city">{{ city }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="event-tags">
+          {% for tag in page.tags %}
+            <span class="event-tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    </header>
+
+    <div class="event-description">
+      {{ content }}
+    </div>
+
+    <footer class="event-footer">
+      {% if page.external_url %}
+      <a href="{{ page.external_url }}" target="_blank" rel="noopener" class="event-external-link">
+        Visit Event Website
+        <span class="external-icon">&nearr;</span>
+      </a>
+      <p class="event-disclaimer">This link will take you to an external website. We are not responsible for the content or availability of external sites.</p>
+      {% endif %}
+
+      <p class="event-updated">Last updated: {{ page.last_updated | date: "%B %d, %Y" }}</p>
+    </footer>
+  </article>
+</body>
+</html>

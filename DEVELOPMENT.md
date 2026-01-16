@@ -16,28 +16,42 @@ This is a Jekyll static site for indexing local gamedev events in Germany (NRW a
 
 ## Site Header
 
-The site header adapts between two states with smooth CSS transitions.
+The site uses a dual-header architecture for smooth transitions between hero and compact states.
 
-### Hero State (default)
+### Architecture
+Two separate header elements exist in the DOM:
+- **Hero Header** (`#header-hero`): Full-size centered layout
+- **Compact Header** (`#header-compact`): Sticky horizontal bar
+
+Both headers contain their own city selector input. The inputs are synced via JavaScript so changes in one update the other.
+
+### Hero Header
 - Large centered title "Event Index" with subtitle
 - Prominent city search input as call-to-action
-- Shown when: user is at top of page AND no city selected
+- Visible by default, fades out on scroll
+- Uses `opacity` transition for smooth fade
 
-### Compact State
+### Compact Header
 - Horizontal bar layout: city input (left), title (right)
 - Smaller, more compact styling
 - White card background with shadow
-- Shown when: user scrolls down (>50px) OR city is selected
+- `position: sticky` with `top: 0` and `z-index: 50`
+- Hidden by default (`opacity: 0`), fades in on scroll
 
-### Sticky Behavior
-- Header uses `position: sticky` with `top: 0`
-- Stays at top of viewport when scrolling
-- `z-index: 50` keeps it above other content
-- Background color prevents content showing through
+### State Transitions
+- **Show compact when**: user scrolls down >100px OR city is selected
+- **Show hero when**: user scrolls back up <20px AND no city selected
+- Hysteresis (20px vs 100px thresholds) prevents flickering near the transition point
+- Only `opacity` animates (0.25s ease) - no layout/font-size transitions
+- `pointer-events` toggled with visibility to prevent interaction with hidden header
+- Hero header uses `position: absolute` when hidden to collapse out of document flow
 
-### Transitions
-- All properties animate with 0.3s ease timing
-- Smooth morphing between hero and compact layouts
+### Header Spacer
+A spacer element (`#header-spacer`) sits at the top of the page:
+- **Height**: 100px (matches scroll threshold)
+- **Visible when**: compact header is shown due to scrolling (not city selection)
+- **Purpose**: Allows users to scroll up to access filter controls without triggering the hero header to reappear
+- When a city is selected, the spacer is hidden to avoid a gap at the top
 
 ## Data Flow
 
@@ -56,7 +70,24 @@ The site header adapts between two states with smooth CSS transitions.
 
 ### Templates
 - `_layouts/default.html` - Base layout, includes CSS and JS, embeds cities data as JSON
+- `_layouts/event.html` - Individual event page layout
 - `_includes/listing-table.html` - Flexbox listing template with data attributes for JS
+
+## Event Pages
+
+Each listing generates its own page at `/event/{listing-name}/`.
+
+### Navigation
+- Clicking a listing on the index navigates to its event page (not the external URL)
+- Event page has a back link to return to the index
+- Browser back button also works
+
+### Event Page Content
+- Full event title and description
+- All cities and tags
+- Last updated date
+- Prominent "Visit Event Website" button linking to `external_url`
+- Disclaimer about external links
 
 ### Data Attributes on Listings
 ```html
@@ -74,9 +105,9 @@ title: Event Name
 tags: [jam, meetup, conference, workshop, networking]
 cities: [CityName]  # or multiple: [City1, City2, City3]
 last_updated: 2026-01-15
-url: https://example.com
+external_url: https://example.com
 ---
-Description content. First sentence shown in listing.
+Description content. First sentence shown in listing, full text on event page.
 ```
 
 ### Cities Format

@@ -10,7 +10,16 @@ permalink: pretty
 # Collections
 collections:
   listings:
-    output: false
+    output: true
+    permalink: /event/:name/
+
+# Default layout for listings
+defaults:
+  - scope:
+      path: ""
+      type: "listings"
+    values:
+      layout: "event"
 
 # Exclude from processing
 exclude:

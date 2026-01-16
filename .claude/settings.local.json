@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(bundle exec jekyll build:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(powershell -Command \"Get-ChildItem *.md | ForEach-Object { \\(Get-Content $_FullName\\) -replace ''^url:'', ''external_url:'' | Set-Content $_FullName }\")",
+      "Bash(powershell -Command \"Get-ChildItem ''D:\\\\repos\\\\gamedev-index\\\\_listings\\\\*.md'' | ForEach-Object { \\(Get-Content $_FullName\\) -replace ''^url:'', ''external_url:'' | Set-Content $_FullName }\")"
     ]
   }
 }

@@ -26,10 +26,10 @@ Jekyll static site displaying local gamedev events, with TypeScript for interact
 title: "Event Name"
 tags: [jam, meetup, conference, workshop, networking]
 cities: [Cologne, Frankfurt]  # supports multiple cities
-last_updated: 2026-01-15      # not displayed, for maintenance
-url: https://example.com
+last_updated: 2026-01-15      # displayed on event page
+external_url: https://example.com  # external website link
 ---
-First sentence shown in table. Rest of description here.
+First sentence shown in table. Full description on event page.
 ```
 
 ### TypeScript (`src/main.ts`)

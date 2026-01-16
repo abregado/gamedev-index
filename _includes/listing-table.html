@@ -5,16 +5,10 @@
        data-tags="{{ listing.tags | jsonify | escape }}"
        data-content="{{ listing.content | strip_html | escape }}"
        data-title="{{ listing.title | downcase }}"
-       data-url="{{ listing.url }}">
+       data-event-url="{{ listing.url | relative_url }}">
     <div class="listing-content">
       <div class="listing-line-1">
-        <span class="listing-name">
-          {% if listing.url %}
-            <a href="{{ listing.url }}" target="_blank" rel="noopener">{{ listing.title }}</a>
-          {% else %}
-            {{ listing.title }}
-          {% endif %}
-        </span>
+        <span class="listing-name">{{ listing.title }}</span>
         <span class="listing-location">{{ listing.cities | first }}</span>
         <span class="listing-tags">
           {% for tag in listing.tags %}
