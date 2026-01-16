@@ -1,37 +1,33 @@
-<table class="listings-table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Location</th>
-      <th>Distance</th>
-      <th>Description</th>
-      <th>Tags</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for listing in site.listings %}
-    <tr class="listing-row"
-        data-cities="{{ listing.cities | jsonify | escape }}"
-        data-tags="{{ listing.tags | jsonify | escape }}"
-        data-content="{{ listing.content | strip_html | escape }}">
-      <td>
-        {% if listing.url %}
-          <a href="{{ listing.url }}" target="_blank" rel="noopener">{{ listing.title }}</a>
-        {% else %}
-          {{ listing.title }}
-        {% endif %}
-      </td>
-      <td class="location-cell">{{ listing.cities | first }}</td>
-      <td><span class="distance no-city">-</span></td>
-      <td class="description-cell"></td>
-      <td>
-        <div class="listing-tags">
+<div class="listings">
+  {% for listing in site.listings %}
+  <div class="listing"
+       data-cities="{{ listing.cities | jsonify | escape }}"
+       data-tags="{{ listing.tags | jsonify | escape }}"
+       data-content="{{ listing.content | strip_html | escape }}"
+       data-title="{{ listing.title | downcase }}">
+    <div class="listing-content">
+      <div class="listing-line-1">
+        <span class="listing-name">
+          {% if listing.url %}
+            <a href="{{ listing.url }}" target="_blank" rel="noopener">{{ listing.title }}</a>
+          {% else %}
+            {{ listing.title }}
+          {% endif %}
+        </span>
+        <span class="listing-location">{{ listing.cities | first }}</span>
+        <span class="listing-tags">
           {% for tag in listing.tags %}
             <span class="listing-tag">{{ tag }}</span>
           {% endfor %}
-        </div>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+        </span>
+      </div>
+      <div class="listing-line-2">
+        <span class="listing-description"></span>
+      </div>
+    </div>
+    <div class="listing-distance-pill">
+      <span class="distance"></span>
+    </div>
+  </div>
+  {% endfor %}
+</div>

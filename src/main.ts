@@ -6,10 +6,11 @@ interface City {
 }
 
 interface Listing {
-  element: HTMLTableRowElement;
+  element: HTMLElement;
   cities: string[];
   tags: string[];
   content: string;
+  title: string;
 }
 
 let cities: City[] = [];
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTagFilters();
   handleUrlParams();
   updateDescriptions();
+  sortAlphabetically();
 });
 
 function loadCities(): void {
@@ -39,17 +41,19 @@ function loadCities(): void {
 }
 
 function initListings(): void {
-  const rows = document.querySelectorAll<HTMLTableRowElement>('.listing-row');
-  rows.forEach((row) => {
-    const citiesAttr = row.dataset.cities;
-    const tagsAttr = row.dataset.tags;
-    const contentAttr = row.dataset.content;
+  const items = document.querySelectorAll<HTMLElement>('.listing');
+  items.forEach((item) => {
+    const citiesAttr = item.dataset.cities;
+    const tagsAttr = item.dataset.tags;
+    const contentAttr = item.dataset.content;
+    const titleAttr = item.dataset.title;
 
     listings.push({
-      element: row,
+      element: item,
       cities: citiesAttr ? JSON.parse(citiesAttr) : [],
       tags: tagsAttr ? JSON.parse(tagsAttr) : [],
       content: contentAttr || '',
+      title: titleAttr || '',
     });
   });
 }
@@ -118,7 +122,11 @@ function selectCity(cityName: string): void {
   selectedCity = cityMap.get(cityName) || null;
   updateLocations();
   updateDistances();
-  sortByDistance();
+  if (selectedCity) {
+    sortByDistance();
+  } else {
+    sortAlphabetically();
+  }
 }
 
 function initTagFilters(): void {
@@ -189,7 +197,7 @@ function handleUrlParams(): void {
 
 function updateDescriptions(): void {
   listings.forEach((listing) => {
-    const descCell = listing.element.querySelector('.description-cell');
+    const descCell = listing.element.querySelector('.listing-description');
     if (!descCell) return;
 
     const firstSentence = extractFirstSentence(listing.content);
@@ -212,7 +220,7 @@ function extractFirstSentence(content: string): string {
 
 function updateLocations(): void {
   listings.forEach((listing) => {
-    const locationCell = listing.element.querySelector('.location-cell');
+    const locationCell = listing.element.querySelector('.listing-location');
     if (!locationCell) return;
 
     const nearestCity = findNearestCity(listing.cities);
@@ -265,26 +273,39 @@ function getMinDistance(listing: Listing): number {
 
 function updateDistances(): void {
   listings.forEach((listing) => {
+    const pill = listing.element.querySelector('.listing-distance-pill');
     const distanceEl = listing.element.querySelector('.distance');
-    if (!distanceEl) return;
+    if (!pill || !distanceEl) return;
 
     if (!selectedCity) {
-      distanceEl.textContent = '-';
-      distanceEl.classList.add('no-city');
+      pill.classList.remove('visible');
       return;
     }
 
-    distanceEl.classList.remove('no-city');
+    pill.classList.add('visible');
     const dist = getMinDistance(listing);
     distanceEl.textContent = formatDistance(dist);
+  });
+}
+
+function sortAlphabetically(): void {
+  const container = document.querySelector('.listings');
+  if (!container) return;
+
+  const sorted = [...listings].sort((a, b) => {
+    return a.title.localeCompare(b.title);
+  });
+
+  sorted.forEach((listing) => {
+    container.appendChild(listing.element);
   });
 }
 
 function sortByDistance(): void {
   if (!selectedCity) return;
 
-  const tbody = document.querySelector('.listings-table tbody');
-  if (!tbody) return;
+  const container = document.querySelector('.listings');
+  if (!container) return;
 
   const sorted = [...listings].sort((a, b) => {
     const distA = getMinDistance(a);
@@ -293,7 +314,7 @@ function sortByDistance(): void {
   });
 
   sorted.forEach((listing) => {
-    tbody.appendChild(listing.element);
+    container.appendChild(listing.element);
   });
 }
 

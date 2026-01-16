@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTagFilters();
     handleUrlParams();
     updateDescriptions();
+    sortAlphabetically();
 });
 function loadCities() {
     const citiesData = document.getElementById('cities-data');
@@ -23,16 +24,18 @@ function loadCities() {
     }
 }
 function initListings() {
-    const rows = document.querySelectorAll('.listing-row');
-    rows.forEach((row) => {
-        const citiesAttr = row.dataset.cities;
-        const tagsAttr = row.dataset.tags;
-        const contentAttr = row.dataset.content;
+    const items = document.querySelectorAll('.listing');
+    items.forEach((item) => {
+        const citiesAttr = item.dataset.cities;
+        const tagsAttr = item.dataset.tags;
+        const contentAttr = item.dataset.content;
+        const titleAttr = item.dataset.title;
         listings.push({
-            element: row,
+            element: item,
             cities: citiesAttr ? JSON.parse(citiesAttr) : [],
             tags: tagsAttr ? JSON.parse(tagsAttr) : [],
             content: contentAttr || '',
+            title: titleAttr || '',
         });
     });
 }
@@ -86,7 +89,12 @@ function selectCity(cityName) {
     selectedCity = cityMap.get(cityName) || null;
     updateLocations();
     updateDistances();
-    sortByDistance();
+    if (selectedCity) {
+        sortByDistance();
+    }
+    else {
+        sortAlphabetically();
+    }
 }
 function initTagFilters() {
     const filters = document.querySelectorAll('.tag-filter');
@@ -151,7 +159,7 @@ function handleUrlParams() {
 }
 function updateDescriptions() {
     listings.forEach((listing) => {
-        const descCell = listing.element.querySelector('.description-cell');
+        const descCell = listing.element.querySelector('.listing-description');
         if (!descCell)
             return;
         const firstSentence = extractFirstSentence(listing.content);
@@ -172,7 +180,7 @@ function extractFirstSentence(content) {
 }
 function updateLocations() {
     listings.forEach((listing) => {
-        const locationCell = listing.element.querySelector('.location-cell');
+        const locationCell = listing.element.querySelector('.listing-location');
         if (!locationCell)
             return;
         const nearestCity = findNearestCity(listing.cities);
@@ -219,24 +227,35 @@ function getMinDistance(listing) {
 }
 function updateDistances() {
     listings.forEach((listing) => {
+        const pill = listing.element.querySelector('.listing-distance-pill');
         const distanceEl = listing.element.querySelector('.distance');
-        if (!distanceEl)
+        if (!pill || !distanceEl)
             return;
         if (!selectedCity) {
-            distanceEl.textContent = '-';
-            distanceEl.classList.add('no-city');
+            pill.classList.remove('visible');
             return;
         }
-        distanceEl.classList.remove('no-city');
+        pill.classList.add('visible');
         const dist = getMinDistance(listing);
         distanceEl.textContent = formatDistance(dist);
+    });
+}
+function sortAlphabetically() {
+    const container = document.querySelector('.listings');
+    if (!container)
+        return;
+    const sorted = [...listings].sort((a, b) => {
+        return a.title.localeCompare(b.title);
+    });
+    sorted.forEach((listing) => {
+        container.appendChild(listing.element);
     });
 }
 function sortByDistance() {
     if (!selectedCity)
         return;
-    const tbody = document.querySelector('.listings-table tbody');
-    if (!tbody)
+    const container = document.querySelector('.listings');
+    if (!container)
         return;
     const sorted = [...listings].sort((a, b) => {
         const distA = getMinDistance(a);
@@ -244,7 +263,7 @@ function sortByDistance() {
         return distA - distB;
     });
     sorted.forEach((listing) => {
-        tbody.appendChild(listing.element);
+        container.appendChild(listing.element);
     });
 }
 function haversineDistance(coords1, coords2) {
