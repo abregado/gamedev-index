@@ -94,7 +94,7 @@ function initTagFilters() {
         .map(([name, count]) => ({
         name,
         count,
-        state: 'allowed',
+        state: 'ignored',
         color: getTagColor(name),
     }));
     // Store in map
@@ -145,23 +145,30 @@ function renderTagFilters(tags) {
     });
 }
 function createTagButton(tag) {
-    const style = tag.state === 'allowed'
-        ? `background-color: ${tag.color}; border-color: ${tag.color};`
-        : '';
-    return `<button class="tag-filter" data-tag="${tag.name}" data-state="${tag.state}" style="${style}">
+    const style = getTagButtonStyle(tag.state, tag.color);
+    return `<button class="tag-filter" data-tag="${tag.name}" data-state="${tag.state}" data-color="${tag.color}" style="${style}">
     <span class="tag-icon"></span>
     <span class="tag-name">${tag.name}</span>
   </button>`;
+}
+function getTagButtonStyle(state, color) {
+    if (state === 'allowed') {
+        return `background-color: ${color}; border-color: ${color};`;
+    }
+    else if (state === 'ignored') {
+        return `border-color: ${color}; color: ${color}; opacity: 0.5;`;
+    }
+    return '';
 }
 function cycleTagState(tagName) {
     const tag = tagInfoMap.get(tagName);
     if (!tag)
         return;
-    // Cycle: allowed → ignored → disallowed → allowed
+    // Cycle: ignored → allowed → disallowed → ignored
     const nextState = {
-        allowed: 'ignored',
-        ignored: 'disallowed',
-        disallowed: 'allowed',
+        ignored: 'allowed',
+        allowed: 'disallowed',
+        disallowed: 'ignored',
     };
     tag.state = nextState[tag.state];
 }
@@ -173,10 +180,20 @@ function updateTagButton(button, tagName) {
     if (tag.state === 'allowed') {
         button.style.backgroundColor = tag.color;
         button.style.borderColor = tag.color;
+        button.style.color = '';
+        button.style.opacity = '';
+    }
+    else if (tag.state === 'ignored') {
+        button.style.backgroundColor = '';
+        button.style.borderColor = tag.color;
+        button.style.color = tag.color;
+        button.style.opacity = '0.5';
     }
     else {
         button.style.backgroundColor = '';
         button.style.borderColor = '';
+        button.style.color = '';
+        button.style.opacity = '';
     }
 }
 function applyTagColors() {

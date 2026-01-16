@@ -238,13 +238,10 @@ body {
 
 .tag-filter[data-state="ignored"] {
   background: #fff;
-  border-color: #ccc;
-  color: #888;
 }
 
 .tag-filter[data-state="ignored"]:hover {
-  border-color: #999;
-  color: #666;
+  opacity: 0.7 !important;
   transform: scale(1.02);
 }
 
