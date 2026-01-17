@@ -1,4 +1,11 @@
 "use strict";
+// SVG Icons
+const ICONS = {
+    check: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-6"/></svg>',
+    circle: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="2"/></svg>',
+    x: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg>',
+    house: '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l6-5 6 5v7a1 1 0 01-1 1H3a1 1 0 01-1-1V7z"/><path d="M6 14V9h4v5"/></svg>',
+};
 // Color palette for tags - visually distinct, accessible colors
 const TAG_COLORS = [
     '#2563eb', // blue
@@ -144,10 +151,21 @@ function renderTagFilters(tags) {
         toggleButton.classList.toggle('expanded', expandedFilters);
     });
 }
+function getTagIcon(state) {
+    switch (state) {
+        case 'allowed':
+            return ICONS.check;
+        case 'disallowed':
+            return ICONS.x;
+        default:
+            return ICONS.circle;
+    }
+}
 function createTagButton(tag) {
     const style = getTagButtonStyle(tag.state, tag.color);
+    const icon = getTagIcon(tag.state);
     return `<button class="tag-filter" data-tag="${tag.name}" data-state="${tag.state}" data-color="${tag.color}" style="${style}">
-    <span class="tag-icon"></span>
+    <span class="tag-icon">${icon}</span>
     <span class="tag-name">${tag.name}</span>
   </button>`;
 }
@@ -177,6 +195,11 @@ function updateTagButton(button, tagName) {
     if (!tag)
         return;
     button.dataset.state = tag.state;
+    // Update icon
+    const iconEl = button.querySelector('.tag-icon');
+    if (iconEl) {
+        iconEl.innerHTML = getTagIcon(tag.state);
+    }
     if (tag.state === 'allowed') {
         button.style.backgroundColor = tag.color;
         button.style.borderColor = tag.color;
@@ -429,7 +452,7 @@ function updateDistances() {
         }
         pill.classList.add('visible');
         const dist = getMinDistance(listing);
-        distanceEl.textContent = formatDistance(dist);
+        distanceEl.innerHTML = formatDistance(dist);
     });
 }
 function sortAlphabetically() {
@@ -476,7 +499,7 @@ function formatDistance(km) {
     if (km === Infinity)
         return '-';
     if (km < 1) {
-        return '\u2302'; // House icon (⌂)
+        return ICONS.house;
     }
     else if (km < 100) {
         return `${Math.round(km)} km`;

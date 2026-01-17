@@ -9,7 +9,7 @@
 <body>
   <article class="event-page">
     <nav class="event-nav">
-      <a href="{{ '/' | relative_url }}" class="back-link">&larr; Back to Event Index</a>
+      <a href="{{ '/' | relative_url }}" class="back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3L5 8l5 5"/></svg> Back to Event Index</a>
     </nav>
 
     <header class="event-header">
@@ -38,7 +38,7 @@
       {% if page.external_url %}
       <a href="{{ page.external_url }}" target="_blank" rel="noopener" class="event-external-link">
         Visit Event Website
-        <span class="external-icon">&nearr;</span>
+        <svg class="external-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1h4M9 2h5v5M6 10L14 2"/></svg>
       </a>
       <p class="event-disclaimer">This link will take you to an external website. We are not responsible for the content or availability of external sites.</p>
       {% endif %}
