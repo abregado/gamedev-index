@@ -10,11 +10,7 @@ title: Add Event
 
   <h1>Add Your Event</h1>
 
-  <h2>Our Mission</h2>
-
-  <p>
-    We aim to provide a comprehensive directory of in-person events in Germany where game developers can meet each other. We do not list online meetups or virtual events. This site serves purely as a link portal to help developers discover events in their area.
-  </p>
+  {% include mission.html %}
 
   <h2>Submit Your Event</h2>
 
