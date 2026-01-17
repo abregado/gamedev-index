@@ -13,31 +13,13 @@ body {
   background: #fafafa;
 }
 
-/* Header spacer - prevents hero from reappearing when scrolling to filters */
-.header-spacer {
-  height: 0;
-}
-
-.header-spacer.visible {
-  height: 100px;
-}
-
-/* Hero Header - Full size at top of page */
+/* Hero Header - Full size at top of page, scrolls normally */
 .header-hero {
   position: relative;
   text-align: center;
   padding: 3rem 1rem;
   margin: 0 -2rem 0 -2rem;
   background: #fafafa;
-  transition: opacity 0.25s ease;
-}
-
-.header-hero.hidden {
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  width: 100%;
-  left: 0;
 }
 
 .header-hero-title {
@@ -71,13 +53,14 @@ body {
   box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
-/* Compact Header - Sticky bar */
+/* Compact Header - Fixed bar that fades in when hero scrolls out of view */
 .header-compact {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
   padding: 0.75rem 2rem;
-  margin: 0 -2rem 1.5rem -2rem;
   background: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   opacity: 0;
@@ -88,6 +71,11 @@ body {
 .header-compact.visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+.header-compact-inner {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .header-compact-content {
@@ -697,7 +685,6 @@ body {
 
   .header-compact {
     padding: 0.5rem 1rem;
-    margin: 0 -1rem 1rem -1rem;
   }
 
   .header-compact-content {

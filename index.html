@@ -3,10 +3,7 @@ layout: default
 title: Event Index
 ---
 
-<!-- Spacer: prevents header from expanding when scrolling up to filters -->
-<div class="header-spacer" id="header-spacer"></div>
-
-<!-- Hero Header: visible at top, fades out on scroll -->
+<!-- Hero Header: always visible, scrolls normally -->
 <header class="header-hero" id="header-hero">
   <a href="{{ '/event-hinzufuegen/' | relative_url }}" class="header-add-button" title="Add your event">+</a>
   <h1 class="header-hero-title">Event Index</h1>
@@ -17,15 +14,17 @@ title: Event Index
   </div>
 </header>
 
-<!-- Compact Header: sticky, fades in on scroll -->
+<!-- Compact Header: fixed, fades in when hero scrolls out of view -->
 <header class="header-compact" id="header-compact">
-  <div class="header-compact-content">
-    <div class="city-selector">
-      <input type="text" class="city-input" placeholder="Enter your city..." autocomplete="off">
-      <div class="city-suggestions"></div>
+  <div class="header-compact-inner">
+    <div class="header-compact-content">
+      <div class="city-selector">
+        <input type="text" class="city-input" placeholder="Enter your city..." autocomplete="off">
+        <div class="city-suggestions"></div>
+      </div>
+      <h1 class="header-compact-title">Event Index</h1>
+      <a href="{{ '/event-hinzufuegen/' | relative_url }}" class="header-add-button" title="Add your event">+</a>
     </div>
-    <h1 class="header-compact-title">Event Index</h1>
-    <a href="{{ '/event-hinzufuegen/' | relative_url }}" class="header-add-button" title="Add your event">+</a>
   </div>
 </header>
 

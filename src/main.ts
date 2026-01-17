@@ -339,7 +339,6 @@ function selectCity(cityName: string): void {
   selectedCity = cityMap.get(cityName) || null;
   updateLocations();
   updateDistances();
-  updateHeaderState();
   if (selectedCity) {
     sortByDistance();
   } else {
@@ -365,31 +364,17 @@ function initHeaderBehavior(): void {
 function updateHeaderState(): void {
   const heroHeader = document.getElementById('header-hero');
   const compactHeader = document.getElementById('header-compact');
-  const spacer = document.getElementById('header-spacer');
 
-  if (!heroHeader || !compactHeader || !spacer) return;
+  if (!heroHeader || !compactHeader) return;
 
-  const isCompact = compactHeader.classList.contains('visible');
-  const hasCitySelected = selectedCity !== null;
-
-  // Hysteresis: require scrolling past 100px to show compact, but only 20px to show hero
-  const compactThreshold = isCompact ? 20 : 100;
-  const shouldShowCompact = window.scrollY > compactThreshold || hasCitySelected;
+  // Show compact header when hero is scrolled out of view
+  const heroRect = heroHeader.getBoundingClientRect();
+  const shouldShowCompact = heroRect.bottom <= 0;
 
   if (shouldShowCompact) {
-    heroHeader.classList.add('hidden');
     compactHeader.classList.add('visible');
-    // Only show spacer when compact is due to scroll, not city selection
-    // This prevents gap at top when city is selected at scroll position 0
-    if (!hasCitySelected) {
-      spacer.classList.add('visible');
-    } else {
-      spacer.classList.remove('visible');
-    }
   } else {
-    heroHeader.classList.remove('hidden');
     compactHeader.classList.remove('visible');
-    spacer.classList.remove('visible');
   }
 }
 
