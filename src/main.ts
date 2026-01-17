@@ -601,7 +601,7 @@ function toRad(deg: number): number {
 function formatDistance(km: number): string {
   if (km === Infinity) return '-';
   if (km < 1) {
-    return '< 1 km';
+    return '\u2302'; // House icon (⌂)
   } else if (km < 100) {
     return `${Math.round(km)} km`;
   } else {

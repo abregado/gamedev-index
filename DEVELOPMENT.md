@@ -123,8 +123,8 @@ Description content. First sentence shown in listing, full text on event page.
 Tags are automatically discovered from all events and displayed in the filter UI.
 
 ### Three States
-- **Allowed** (default): Colored background with checkmark. Events with this tag can be shown.
-- **Ignored**: Gray outline with dot. Tag has no effect on filtering.
+- **Ignored** (default): Desaturated tag color outline with dot. Tag has no effect on filtering.
+- **Allowed**: Colored background with checkmark. Events with this tag can be shown.
 - **Disallowed**: Red outline with X, strikethrough. Events with this tag are hidden.
 
 ### Filter Logic
@@ -141,7 +141,7 @@ Colors are assigned from a 12-color palette based on a hash of the tag name. Thi
 ### UI Behavior
 - Top 10 most common tags shown by default
 - "Show more" expands to reveal additional tags
-- Click a tag to cycle: Allowed → Ignored → Disallowed → Allowed
+- Click a tag to cycle: Ignored → Allowed → Disallowed → Ignored
 
 ## Distance Sorting
 

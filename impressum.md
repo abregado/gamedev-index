@@ -13,7 +13,7 @@ title: Impressum
   <h2>Our Mission</h2>
 
   <p>
-    We aim to provide a comprehensive directory of in-person events where game developers can meet each other. We do not list online meetups or virtual events. This site serves purely as a link portal to help developers discover events in their area.
+    We aim to provide a comprehensive directory of in-person events in Germany where game developers can meet each other. We do not list online meetups or virtual events. This site serves purely as a link portal to help developers discover events in their area.
   </p>
 
   <h2>Angaben gemäß § 5 TMG</h2>

@@ -709,8 +709,13 @@ body {
     padding: 0 0.75rem;
   }
 
+  .listing {
+    position: relative;
+  }
+
   .listing-line-1 {
     gap: 0.5rem;
+    padding-right: 3.5rem;
   }
 
   .listing-name {
@@ -731,7 +736,16 @@ body {
   }
 
   .listing-distance-pill {
-    min-width: 60px;
-    padding: 0 0.75rem;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    min-width: auto;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+  }
+
+  .listing-distance-pill.visible {
+    display: inline-flex;
   }
 }
