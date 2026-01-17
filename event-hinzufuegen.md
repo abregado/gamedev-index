@@ -5,7 +5,7 @@ title: Add Event
 
 <article class="legal-page">
   <nav class="legal-nav">
-    <a href="{{ '/' | relative_url }}" class="back-link">&larr; Back to Event Index</a>
+    <a href="{{ '/' | relative_url }}" class="back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3L5 8l5 5"/></svg> Back to Event Index</a>
   </nav>
 
   <h1>Add Your Event</h1>
