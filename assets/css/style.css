@@ -253,7 +253,8 @@ body {
   background: #fff;
   border-color: #dc3545;
   color: #dc3545;
-  text-decoration: line-through;
+  position: relative;
+  background-color: rgba(220, 53, 69, 0.48);
 }
 
 .tag-filter[data-state="disallowed"]:hover {
@@ -263,6 +264,22 @@ body {
 
 .tag-filter[data-state="disallowed"] .tag-icon::after {
   content: "\2717";
+}
+
+.tag-filter[data-state="disallowed"]:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 2px solid;
+  border-color: inherit;
+
+  -webkit-transform:rotate(-10deg);
+  -moz-transform:rotate(-10deg);
+  -ms-transform:rotate(-10deg);
+  -o-transform:rotate(-10deg);
+  transform:rotate(-10deg);
 }
 
 /* Expand/collapse toggle */
@@ -404,7 +421,8 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  background: #333;
+  border-color: #333;
+  background: #666;
   color: #fff;
   padding: 0 1.25rem;
   min-width: 80px;
