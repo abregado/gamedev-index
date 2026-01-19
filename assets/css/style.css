@@ -245,7 +245,7 @@ body {
 }
 
 .tag-filter[data-state="disallowed"]:hover {
-  background: #fff5f5;
+  filter: brightness(1.2) contrast(0.9);
   transform: scale(1.02);
 }
 
