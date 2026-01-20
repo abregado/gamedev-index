@@ -44,7 +44,7 @@ title: Add Entry
     </p>
 
     <p>
-    For example, we do not recommend listing exact meeting times or places in your description. something like "once a month in Frankfurt" is fine, but the rest should be found when following your link.
+    For example, we do not recommend listing exact meeting times or places in your description. Something like "once a month in Frankfurt" is fine, but the rest should be found when following your link.
     </p>
     
 </article>
