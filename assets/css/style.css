@@ -618,8 +618,9 @@ body {
   color: #ccc;
 }
 
-/* Legal Pages */
-.legal-page {
+/* Legal Pages + Info Pages */
+.legal-page,
+.info-page {
   max-width: 700px;
   margin: 0 auto;
 }
@@ -628,49 +629,57 @@ body {
   margin-bottom: 2rem;
 }
 
-.legal-page h1 {
+.legal-page h1,
+.info-page h1 {
   font-size: 2rem;
   font-weight: 600;
   margin: 0 0 2rem 0;
   color: #333;
 }
 
-.legal-page h2 {
+.legal-page h2,
+.info-page h2 {
   font-size: 1.25rem;
   font-weight: 600;
   margin: 2rem 0 1rem 0;
   color: #333;
 }
 
-.legal-page h3 {
+.legal-page h3,
+.info-page h3 {
   font-size: 1rem;
   font-weight: 600;
   margin: 1.5rem 0 0.75rem 0;
   color: #444;
 }
 
-.legal-page p {
+.legal-page p,
+.info-page p {
   margin: 0 0 1rem 0;
   line-height: 1.7;
   color: #555;
 }
 
-.legal-page ul {
+.legal-page ul,
+.info-page ul {
   margin: 0 0 1rem 0;
   padding-left: 1.5rem;
   color: #555;
 }
 
-.legal-page li {
+.legal-page li,
+.info-page li {
   margin-bottom: 0.5rem;
   line-height: 1.6;
 }
 
-.legal-page a {
+.legal-page a,
+.info-page a {
   color: #0066cc;
 }
 
-.legal-page a:hover {
+.legal-page a:hover,
+.info-page a:hover {
   text-decoration: underline;
 }
 

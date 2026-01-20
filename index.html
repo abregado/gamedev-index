@@ -7,7 +7,10 @@ title: Event Index
 <header class="header-hero" id="header-hero">
   <a href="{{ '/event-hinzufuegen/' | relative_url }}" class="header-add-button" title="Add your event"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></a>
   <h1 class="header-hero-title">Event Index</h1>
-  <p class="header-hero-subtitle">Find gamedev events near you</p>
+  <p class="header-hero-subtitle">
+    Find gamedev events near you, or
+    <a href="{{ '/add-entry/' | relative_url }}">add your own entry</a>
+  </p>
   <div class="city-selector">
     <input type="text" class="city-input" placeholder="Enter your city..." autocomplete="off">
     <div class="city-suggestions"></div>
