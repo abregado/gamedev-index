@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleUrlParams();
     updateDescriptions();
     applyTagColors();
+    applyEventTagColors();
     applyFilters();
     sortAlphabetically();
 });
@@ -508,3 +509,13 @@ function formatDistance(km) {
         return `${Math.round(km / 10) * 10} km`;
     }
 }
+function applyEventTagColors() {
+    document.querySelectorAll('.event-tag').forEach((el) => {
+        const name = (el.textContent || '').trim();
+        if (name) {
+            el.style.backgroundColor = getTagColor(name);
+        }
+    });
+}
+
+//# sourceMappingURL=main.js.map

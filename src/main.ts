@@ -64,7 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
   handleUrlParams();
   updateDescriptions();
   applyTagColors();
-  applyFilters();
+  applyEventTagColors();
+  applyFilters();   
   sortAlphabetically();
 });
 
@@ -277,6 +278,15 @@ function applyTagColors(): void {
         tagEl.style.backgroundColor = color;
       }
     });
+  });
+}
+
+function applyEventTagColors(): void {
+  document.querySelectorAll<HTMLElement>('.event-tag').forEach((el) => {
+    const name = el.textContent?.trim() || '';
+    if (name) {
+      el.style.backgroundColor = getTagColor(name);
+    }
   });
 }
 
