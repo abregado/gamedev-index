@@ -12,6 +12,10 @@ title: Impressum
 
   {% include mission.html %}
 
+  <p>
+  If you would like to add an entry, please <a href="{{ '/add-entry/' | relative_url }}">contact us here</a>
+  </p>
+
   <h2>Angaben gemäß § 5 TMG</h2>
 
   <p>
