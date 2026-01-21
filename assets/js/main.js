@@ -3,7 +3,7 @@
 const ICONS = {
     check: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-6"/></svg>',
     circle: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="2"/></svg>',
-    x: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg>',
+    x: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l6 6M9 3l-6 6"/></svg>',
     house: '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l6-5 6 5v7a1 1 0 01-1 1H3a1 1 0 01-1-1V7z"/><path d="M6 14V9h4v5"/></svg>',
 };
 // Color palette for tags - visually distinct, accessible colors
@@ -441,19 +441,55 @@ function getMinDistance(listing) {
     });
     return minDistance;
 }
+
+// Get a color that changes the higher the distance gets, up to a maximum
+function getDistanceColor(km) {
+    if (!Number.isFinite(km) || km < 0) {
+        km = 0;
+    }
+    const maxKm = 200;
+    const clamped = Math.min(km, maxKm);
+    const t = clamped / maxKm; // 0 (near) -> 1 (far)
+
+    const start = { r: 0x20, g: 0xb2, b: 0xaa };
+    const end = { r: 0xf4, g: 0xa4, b: 0x60 };
+
+    const r = Math.round(start.r + (end.r - start.r) * t);
+    const g = Math.round(start.g + (end.g - start.g) * t);
+    const b = Math.round(start.b + (end.b - start.b) * t);
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
 function updateDistances() {
     listings.forEach((listing) => {
         const pill = listing.element.querySelector('.listing-distance-pill');
         const distanceEl = listing.element.querySelector('.distance');
         if (!pill || !distanceEl)
             return;
+
         if (!selectedCity) {
             pill.classList.remove('visible');
+            // Reset styles when no city is selected
+            pill.style.background = '';
+            pill.style.borderColor = '';
             return;
         }
+
         pill.classList.add('visible');
         const dist = getMinDistance(listing);
+
+        // Set label text/icon
         distanceEl.innerHTML = formatDistance(dist);
+
+        if (dist === Infinity) {
+            pill.style.background = '';
+            pill.style.borderColor = '';
+        } else {
+            const color = getDistanceColor(dist); // or any fixed color if you prefer
+            pill.style.background = color;
+            pill.style.borderColor = color;
+        }
     });
 }
 function sortAlphabetically() {
