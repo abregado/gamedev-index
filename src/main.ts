@@ -86,7 +86,6 @@ function initListings(): void {
     const tagsAttr = item.dataset.tags;
     const contentAttr = item.dataset.content;
     const titleAttr = item.dataset.title;
-    const eventUrl = item.dataset.eventUrl;
 
     listings.push({
       element: item,
@@ -95,13 +94,6 @@ function initListings(): void {
       content: contentAttr || '',
       title: titleAttr || '',
     });
-
-    // Make entire listing clickable - navigate to event page
-    if (eventUrl) {
-      item.addEventListener('click', () => {
-        window.location.href = eventUrl;
-      });
-    }
   });
 }
 

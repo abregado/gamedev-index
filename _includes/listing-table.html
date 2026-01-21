@@ -1,11 +1,11 @@
 <div class="listings">
   {% for listing in site.listings %}
-  <div class="listing"
-       data-cities="{{ listing.cities | jsonify | escape }}"
-       data-tags="{{ listing.tags | jsonify | escape }}"
-       data-content="{{ listing.content | strip_html | escape }}"
-       data-title="{{ listing.title | downcase }}"
-       data-event-url="{{ listing.url | relative_url }}">
+  <a class="listing"
+     href="{{ listing.url | relative_url }}"
+     data-cities="{{ listing.cities | jsonify | escape }}"
+     data-tags="{{ listing.tags | jsonify | escape }}"
+     data-content="{{ listing.content | strip_html | escape }}"
+     data-title="{{ listing.title | downcase }}">
     <div class="listing-content">
       <div class="listing-line-1">
         <span class="listing-name">{{ listing.title }}</span>
@@ -23,6 +23,6 @@
     <div class="listing-distance-pill">
       <span class="distance"></span>
     </div>
-  </div>
+  </a>
   {% endfor %}
 </div>
