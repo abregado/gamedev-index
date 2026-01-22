@@ -542,20 +542,53 @@ function getMinDistance(listing: Listing): number {
   return minDistance;
 }
 
+// Get a color that changes the higher the distance gets, up to a maximum
+function getDistanceColor(km: number): string {
+  if (!Number.isFinite(km) || km < 0) {
+    km = 0;
+  }
+  const maxKm = 200;
+  const clamped = Math.min(km, maxKm);
+  const t = clamped / maxKm; // 0 (near) -> 1 (far)
+
+  const start = { r: 0x20, g: 0xb2, b: 0xaa };
+  const end = { r: 0xf4, g: 0xa4, b: 0x60 };
+
+  const r = Math.round(start.r + (end.r - start.r) * t);
+  const g = Math.round(start.g + (end.g - start.g) * t);
+  const b = Math.round(start.b + (end.b - start.b) * t);
+
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
 function updateDistances(): void {
   listings.forEach((listing) => {
-    const pill = listing.element.querySelector('.listing-distance-pill');
+    const pill = listing.element.querySelector('.listing-distance-pill') as HTMLElement;
     const distanceEl = listing.element.querySelector('.distance');
     if (!pill || !distanceEl) return;
 
     if (!selectedCity) {
       pill.classList.remove('visible');
+      // Reset styles when no city is selected
+      pill.style.background = '';
+      pill.style.borderColor = '';
       return;
     }
 
     pill.classList.add('visible');
     const dist = getMinDistance(listing);
+
+    // Set label text/icon
     distanceEl.innerHTML = formatDistance(dist);
+
+    if (dist === Infinity) {
+      pill.style.background = '';
+      pill.style.borderColor = '';
+    } else {
+      const color = getDistanceColor(dist);
+      pill.style.background = color;
+      pill.style.borderColor = color;
+    }
   });
 }
 
