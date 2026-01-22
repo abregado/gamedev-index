@@ -547,16 +547,19 @@ function getDistanceColor(km: number): string {
   if (!Number.isFinite(km) || km < 0) {
     km = 0;
   }
-  const maxKm = 200;
+  const maxKm = 250;
   const clamped = Math.min(km, maxKm);
   const t = clamped / maxKm; // 0 (near) -> 1 (far)
+  
+  // Apply EaseOutQuad curve:
+  const eased = 1 - (1 - t) * (1 - t);
 
   const start = { r: 0x20, g: 0xb2, b: 0xaa };
   const end = { r: 0xf4, g: 0xa4, b: 0x60 };
 
-  const r = Math.round(start.r + (end.r - start.r) * t);
-  const g = Math.round(start.g + (end.g - start.g) * t);
-  const b = Math.round(start.b + (end.b - start.b) * t);
+  const r = Math.round(start.r + (end.r - start.r) * eased);
+  const g = Math.round(start.g + (end.g - start.g) * eased);
+  const b = Math.round(start.b + (end.b - start.b) * eased);
 
   return `rgb(${r}, ${g}, ${b})`;
 }
