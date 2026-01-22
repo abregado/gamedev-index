@@ -421,9 +421,11 @@ body {
   right: 0.5rem;
   min-width: auto;
   padding: 0.25rem 0.5rem;
-  border-radius: 12px;
   font-size: 0.875rem;
   font-weight: 500;
+  border-radius: 0 0 0 10px;
+  margin-top: -0.6rem;
+  margin-right: -0.55rem;
 }
 
 .listing-distance-pill.visible {
@@ -433,6 +435,8 @@ body {
 .listing-distance-pill svg {
   width: 14px;
   height: 14px;
+  margin-left: 1px;
+  margin-right: 1px;
 }
 
 /* Event Page */
@@ -776,11 +780,22 @@ body {
     right: 0.5rem;
     min-width: auto;
     padding: 0.25rem 0.5rem;
-    border-radius: 12px;
+    padding: 0.25rem 0.5rem 0.1rem 0.5rem;
     font-size: 0.75rem;
+    border-radius: 0 0 0 8px;
+    margin-top: -0.7rem;
+    margin-right: -0.6rem;
   }
 
   .listing-distance-pill.visible {
     display: inline-flex;
+  }
+
+  .listing-distance-pill svg {
+    width: 14px;
+    height: 14px;
+    margin-top: 3px;
+    margin-bottom: -1px;
+    margin-right: 1px;
   }
 }
