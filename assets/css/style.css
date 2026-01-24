@@ -770,6 +770,10 @@ body {
 
   .listing-name {
     flex-shrink: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 87%;
   }
 
   .listing-location {
