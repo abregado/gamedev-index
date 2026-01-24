@@ -356,6 +356,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  max-width: 102%;
 }
 
 .listing-line-1 {
@@ -437,6 +438,11 @@ body {
   height: 14px;
   margin-left: 1px;
   margin-right: 1px;
+}
+
+/* Hide city name in distance pill on desktop */
+.distance-cityname {
+  display: none;
 }
 
 /* Event Page */
@@ -763,9 +769,13 @@ body {
     position: relative;
   }
 
+  .listing-content {
+    padding: 1.2rem 1rem;
+  }
+
   .listing-line-1 {
     gap: 0.5rem;
-    padding-right: 3.5rem;
+    padding-right: 0;
   }
 
   .listing-name {
@@ -773,11 +783,11 @@ body {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    max-width: 87%;
+    max-width: 100%;
   }
 
   .listing-location {
-    flex-shrink: 0;
+    display: none;
   }
 
   .listing-location::before {
@@ -786,7 +796,8 @@ body {
 
   .listing-tags {
     width: 100%;
-    margin-top: 0.25rem;
+    margin-left: -0.07rem;
+    margin-top: -0.14rem;
   }
 
   .listing-distance-pill {
@@ -812,5 +823,10 @@ body {
     margin-top: 3px;
     margin-bottom: -1px;
     margin-right: 1px;
+  }
+
+  /* Show city name in distance pill on mobile */
+  .distance-cityname {
+    display: inline;
   }
 }
