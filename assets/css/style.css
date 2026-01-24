@@ -423,7 +423,7 @@ body {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  border-radius: 0 0 0 10px;
+  border-radius: 0 0 0 8px;
   margin-top: -0.6rem;
   margin-right: -0.55rem;
 }
@@ -573,7 +573,6 @@ body {
   color: #999;
 }
 
-/* Header Add Button */
 .header-add-button {
   display: flex;
   align-items: center;
@@ -718,11 +717,12 @@ body {
   }
 
   .header-compact {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   }
 
   .header-compact-content {
     flex-wrap: wrap;
+    gap: 0.8rem;
   }
 
   .header-compact-title {
@@ -733,6 +733,17 @@ body {
     max-width: none;
     flex: 1;
     min-width: 150px;
+  }
+
+  .header-compact .city-selector input {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .header-add-button {
+    width: 1.8rem;
+    height: 1.8rem;
   }
 
   .tag-filters-content {
