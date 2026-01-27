@@ -267,7 +267,7 @@ function applyTagColors(): void {
       const tagEl = tagElements[index] as HTMLElement;
       if (tagEl) {
         const color = getTagColor(tagName);
-        tagEl.style.backgroundColor = color;
+        tagEl.style.color = color;
       }
     });
   });

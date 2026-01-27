@@ -173,7 +173,7 @@ body {
 
 .tag-filters-content {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0;
   overflow: hidden;
 }
 
@@ -181,9 +181,10 @@ body {
   display: flex;
   flex-wrap: nowrap;
   gap: 0.375rem;
-  height: 1.75rem;
+  height: 2.25rem;
   align-items: center;
   overflow: hidden;
+  padding: 0 1rem;
 }
 
 .tag-filters-expanded {
@@ -192,6 +193,7 @@ body {
   gap: 0.375rem;
   margin-top: 0.5rem;
   padding-top: 0.5rem;
+  padding: 0.5rem 1rem 0 1rem;
   border-top: 1px solid #eee;
 }
 
@@ -200,10 +202,10 @@ body {
 }
 
 .tag-filter {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
+  padding: 0.15rem 0.7rem 0.27rem 0.55rem;
+  font-size: 0.875rem;
   border: 2px solid;
-  border-radius: 12px;
+  border-radius: 2rem;
   background: #fff;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -213,6 +215,9 @@ body {
   user-select: none;
   flex-shrink: 0;
   white-space: nowrap;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-family: inherit;
 }
 
 .tag-filter .tag-icon {
@@ -395,9 +400,12 @@ body {
 
 .listing-tag {
   padding: 0.125rem 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: capitalize;
   border-radius: 10px;
   color: #fff;
+  opacity: 0.5;
 }
 
 .listing-line-2 {
@@ -758,7 +766,7 @@ body {
 
   .tag-filters-main {
     flex-wrap: wrap;
-    height: 3.75rem;
+    height: 4.5rem;
   }
 
   .tag-filters-toggle {
