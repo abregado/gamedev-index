@@ -501,6 +501,7 @@ body {
 .event-cities {
   display: inline;
   padding-right: 1.25rem;
+  opacity: 0.75;
 }
 
 .event-city {
@@ -521,6 +522,7 @@ body {
   font-size: 1rem;
   text-transform: capitalize;
   color: #666;
+  opacity: 0.67;
 }
 
 .event-description {
