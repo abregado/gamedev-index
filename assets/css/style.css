@@ -65,7 +65,7 @@ body {
 }
 
 .header-hero-line {
-  display: inline;
+  display: inline-block;
 }
 
 /* Compact Header - Fixed bar that fades in when hero scrolls out of view */
@@ -494,21 +494,18 @@ body {
 }
 
 .event-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
+  display: block;
+  padding-left: 0.1rem;
 }
 
 .event-cities {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  display: inline;
+  padding-right: 1.25rem;
 }
 
 .event-city {
-  color: #666;
-  font-size: 0.9rem;
+  color: #6a5acd;
+  font-size: 1rem;
 }
 
 .event-city:not(:last-child)::after {
@@ -516,17 +513,14 @@ body {
 }
 
 .event-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
+  display: inline;
 }
 
 .event-tag {
-  padding: 0.25rem 0.625rem;
-  font-size: 0.8rem;
-  border-radius: 12px;
-  background: #20b2aa;
-  color: #fff;
+  padding: 0.25rem 1.25rem 0.25rem 0;
+  font-size: 1rem;
+  text-transform: capitalize;
+  color: #666;
 }
 
 .event-description {
@@ -715,6 +709,14 @@ body {
   body {
     padding: 1rem;
     padding-top: 0.5rem;
+  }
+
+  .event-cities {
+      padding-right: 1.1rem;
+  }
+
+  .event-tag {
+      padding: 0.25rem 1.1rem 0.25rem 0;
   }
 
   .header-hero {

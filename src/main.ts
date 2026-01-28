@@ -277,7 +277,7 @@ function applyEventTagColors(): void {
   document.querySelectorAll<HTMLElement>('.event-tag').forEach((el) => {
     const name = el.textContent?.trim() || '';
     if (name) {
-      el.style.backgroundColor = getTagColor(name);
+      el.style.color = getTagColor(name);
     }
   });
 }
