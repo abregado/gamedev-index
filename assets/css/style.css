@@ -374,7 +374,7 @@ body {
 
 .listing-name {
   color: #20b2aa;   
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .listing:hover .listing-name {
@@ -392,6 +392,8 @@ body {
 
 .listing-line-3 {
   display: inline;
+  font-size: 0.75rem;
+  margin: 0.17rem 0 0.27rem 0;
 }
 
 .listing-location {
