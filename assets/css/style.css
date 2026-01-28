@@ -64,6 +64,10 @@ body {
   box-shadow: 0 0 0 3px #20b2aa24;
 }
 
+.header-hero-line {
+  display: inline;
+}
+
 /* Compact Header - Fixed bar that fades in when hero scrolls out of view */
 .header-compact {
   position: fixed;
