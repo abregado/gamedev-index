@@ -9,15 +9,17 @@
     <div class="listing-content">
       <div class="listing-line-1">
         <span class="listing-name">{{ listing.title }}</span>
+      </div>
+      <div class="listing-line-2">
+        <span class="listing-description"></span>
+      </div>
+      <div class="listing-line-3">
         <span class="listing-location">{{ listing.cities | first }}</span>
         <span class="listing-tags">
           {% for tag in listing.tags %}
             <span class="listing-tag">{{ tag }}</span>
           {% endfor %}
         </span>
-      </div>
-      <div class="listing-line-2">
-        <span class="listing-description"></span>
       </div>
     </div>
     <div class="listing-distance-pill">

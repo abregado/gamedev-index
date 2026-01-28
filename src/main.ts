@@ -542,28 +542,6 @@ function getMinDistance(listing: Listing): number {
   return minDistance;
 }
 
-function getMinDistanceAndCity(listing: Listing): { distance: number; cityName: string | null } {
-  if (!selectedCity) return { distance: Infinity, cityName: null };
-
-  let minDistance = Infinity;
-  let nearestCityName: string | null = null;
-
-  listing.cities.forEach((cityName) => {
-    const city = cityMap.get(cityName);
-    if (city) {
-      const dist = haversineDistance(
-        selectedCity!.coordinates,
-        city.coordinates
-      );
-      if (dist < minDistance) {
-        minDistance = dist;
-        nearestCityName = cityName;
-      }
-    }
-  });
-
-  return { distance: minDistance, cityName: nearestCityName };
-}
 
 // Get a color that changes the higher the distance gets, up to a maximum
 function getDistanceColor(km: number): string {
@@ -602,13 +580,10 @@ function updateDistances(): void {
     }
 
     pill.classList.add('visible');
-    const { distance, cityName } = getMinDistanceAndCity(listing);
-
-    // Only show city name if it's different from the selected city
-    const showCityName = cityName && cityName !== selectedCity.name;
+    const distance = getMinDistance(listing);
 
     // Set label text/icon with city name for mobile (only if different)
-    distanceEl.innerHTML = formatDistance(distance, showCityName ? cityName : null);
+    distanceEl.innerHTML = formatDistance(distance);
 
     if (distance === Infinity) {
       pill.style.background = '';
@@ -673,22 +648,14 @@ function toRad(deg: number): number {
   return deg * (Math.PI / 180);
 }
 
-function formatDistance(km: number, cityName?: string | null): string {
+function formatDistance(km: number): string {
   if (km === Infinity) return '-';
   
-  let distanceText: string;
   if (km < 1) {
-    distanceText = ICONS.house;
+    return ICONS.house;
   } else if (km < 100) {
-    distanceText = `${Math.round(km)}&nbsp;km`;
+    return `${Math.round(km)}&nbsp;km`;
   } else {
-    distanceText = `${Math.round(km / 10) * 10}&nbsp;km`;
+    return `${Math.round(km / 10) * 10}&nbsp;km`;
   }
-
-  // Add city name wrapped in a span for mobile-only display (only if provided)
-  if (cityName) {
-    return `<span class="distance-cityname">${cityName},&nbsp;</span>${distanceText}`;
-  }
-  
-  return distanceText;
 }
