@@ -483,11 +483,12 @@ body {
 }
 
 .event-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.55rem;
 }
 
 .event-title {
   font-size: 2rem;
+  line-height: 2.5rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
   color: #333;
@@ -572,13 +573,13 @@ body {
 }
 
 .event-disclaimer {
-  margin: 1.4rem 0 0 0;
+  margin: 1.5rem 0 0 0;
   font-size: 0.8rem;
   color: #888;
 }
 
 .event-updated {
-  margin: 0.5rem 0 0 0;
+  margin: 0.3rem 0 0 0;
   font-size: 0.8rem;
   color: #999;
 }
@@ -719,6 +720,14 @@ body {
 
   .event-tag {
       padding: 0.25rem 1.1rem 0.25rem 0;
+  }
+
+  .event-title {
+      font-size: 1.7rem;
+      line-height: 2rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+      color: #333;
   }
 
   .header-hero {
