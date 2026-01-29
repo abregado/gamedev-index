@@ -3,7 +3,7 @@
 const ICONS = {
     check: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-6"/></svg>',
     circle: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="2"/></svg>',
-    x: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l6 6M9 3l-6 6"/></svg>',
+    x: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg>',
     house: '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l6-5 6 5v7a1 1 0 01-1 1H3a1 1 0 01-1-1V7z"/><path d="M6 14V9h4v5"/></svg>',
 };
 // Color palette for tags - visually distinct, accessible colors
@@ -27,6 +27,7 @@ let listings = [];
 let selectedCity = null;
 let tagInfoMap = new Map();
 let expandedFilters = false;
+let nominatimTimer = null;
 const MAX_VISIBLE_TAGS = 10;
 document.addEventListener('DOMContentLoaded', () => {
     loadCities();
@@ -57,7 +58,6 @@ function initListings() {
         const tagsAttr = item.dataset.tags;
         const contentAttr = item.dataset.content;
         const titleAttr = item.dataset.title;
-        const eventUrl = item.dataset.eventUrl;
         listings.push({
             element: item,
             cities: citiesAttr ? JSON.parse(citiesAttr) : [],
@@ -65,12 +65,6 @@ function initListings() {
             content: contentAttr || '',
             title: titleAttr || '',
         });
-        // Make entire listing clickable - navigate to event page
-        if (eventUrl) {
-            item.addEventListener('click', () => {
-                window.location.href = eventUrl;
-            });
-        }
     });
 }
 // Generate a consistent hash from a string
@@ -227,10 +221,64 @@ function applyTagColors() {
             const tagEl = tagElements[index];
             if (tagEl) {
                 const color = getTagColor(tagName);
-                tagEl.style.backgroundColor = color;
+                tagEl.style.color = color;
             }
         });
     });
+}
+function applyEventTagColors() {
+    document.querySelectorAll('.event-tag').forEach((el) => {
+        const name = el.textContent?.trim() || '';
+        if (name) {
+            el.style.color = getTagColor(name);
+        }
+    });
+}
+async function fetchNominatimCities(query, suggestions) {
+    try {
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
+        const response = await fetch(url);
+        if (!response.ok)
+            return;
+        const results = await response.json();
+        if (!results.length)
+            return;
+        const nominatimCities = results.map((r) => ({
+            name: r.address?.city || r.address?.town || r.address?.village || r.name,
+            state: r.address?.state || '',
+            country: 'Germany',
+            coordinates: [parseFloat(r.lat), parseFloat(r.lon)],
+        }));
+        // Deduplicate by name
+        const seen = new Set();
+        const unique = nominatimCities.filter((c) => {
+            if (seen.has(c.name))
+                return false;
+            seen.add(c.name);
+            return true;
+        });
+        suggestions.innerHTML = unique
+            .map((city) => `<div class="city-suggestion" data-city="${city.name}">${city.name}${city.state ? ', ' + city.state : ''}</div>`)
+            .join('');
+        suggestions.classList.add('active');
+        suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
+            el.addEventListener('click', () => {
+                const cityName = el.dataset.city;
+                if (cityName) {
+                    const city = unique.find((c) => c.name === cityName);
+                    if (city) {
+                        cityMap.set(city.name, city);
+                    }
+                    selectCity(cityName);
+                    syncCityInputs(cityName);
+                    suggestions.classList.remove('active');
+                }
+            });
+        });
+    }
+    catch {
+        // Silently fail on network errors
+    }
 }
 function initCitySelector() {
     // Get all city inputs and their suggestion containers
@@ -251,8 +299,16 @@ function initCitySelector() {
             const matches = cities.filter((city) => city.name.toLowerCase().includes(query) ||
                 city.state.toLowerCase().includes(query));
             if (matches.length === 0) {
-                suggestions.classList.remove('active');
+                if (nominatimTimer)
+                    clearTimeout(nominatimTimer);
+                suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
+                suggestions.classList.add('active');
+                nominatimTimer = setTimeout(() => fetchNominatimCities(query, suggestions), 2000);
                 return;
+            }
+            if (nominatimTimer) {
+                clearTimeout(nominatimTimer);
+                nominatimTimer = null;
             }
             suggestions.innerHTML = matches
                 .slice(0, 10)
@@ -441,33 +497,29 @@ function getMinDistance(listing) {
     });
     return minDistance;
 }
-
 // Get a color that changes the higher the distance gets, up to a maximum
 function getDistanceColor(km) {
     if (!Number.isFinite(km) || km < 0) {
         km = 0;
     }
-    const maxKm = 200;
+    const maxKm = 250;
     const clamped = Math.min(km, maxKm);
     const t = clamped / maxKm; // 0 (near) -> 1 (far)
-
-    const start = { r: 0x20, g: 0xb2, b: 0xaa };
+    // Easing curve for the color transition
+    const eased = Math.sqrt(t);
+    const start = { r: 0x5f, g: 0xae, b: 0x94 };
     const end = { r: 0xf4, g: 0xa4, b: 0x60 };
-
-    const r = Math.round(start.r + (end.r - start.r) * t);
-    const g = Math.round(start.g + (end.g - start.g) * t);
-    const b = Math.round(start.b + (end.b - start.b) * t);
-
+    const r = Math.round(start.r + (end.r - start.r) * eased);
+    const g = Math.round(start.g + (end.g - start.g) * eased);
+    const b = Math.round(start.b + (end.b - start.b) * eased);
     return `rgb(${r}, ${g}, ${b})`;
 }
-
 function updateDistances() {
     listings.forEach((listing) => {
         const pill = listing.element.querySelector('.listing-distance-pill');
         const distanceEl = listing.element.querySelector('.distance');
         if (!pill || !distanceEl)
             return;
-
         if (!selectedCity) {
             pill.classList.remove('visible');
             // Reset styles when no city is selected
@@ -475,18 +527,16 @@ function updateDistances() {
             pill.style.borderColor = '';
             return;
         }
-
         pill.classList.add('visible');
-        const dist = getMinDistance(listing);
-
-        // Set label text/icon
-        distanceEl.innerHTML = formatDistance(dist);
-
-        if (dist === Infinity) {
+        const distance = getMinDistance(listing);
+        // Set label text/icon with city name for mobile (only if different)
+        distanceEl.innerHTML = formatDistance(distance);
+        if (distance === Infinity) {
             pill.style.background = '';
             pill.style.borderColor = '';
-        } else {
-            const color = getDistanceColor(dist); // or any fixed color if you prefer
+        }
+        else {
+            const color = getDistanceColor(distance);
             pill.style.background = color;
             pill.style.borderColor = color;
         }
@@ -539,19 +589,9 @@ function formatDistance(km) {
         return ICONS.house;
     }
     else if (km < 100) {
-        return `${Math.round(km)} km`;
+        return `${Math.round(km)}&nbsp;km`;
     }
     else {
-        return `${Math.round(km / 10) * 10} km`;
+        return `${Math.round(km / 10) * 10}&nbsp;km`;
     }
 }
-function applyEventTagColors() {
-    document.querySelectorAll('.event-tag').forEach((el) => {
-        const name = (el.textContent || '').trim();
-        if (name) {
-            el.style.backgroundColor = getTagColor(name);
-        }
-    });
-}
-
-//# sourceMappingURL=main.js.map

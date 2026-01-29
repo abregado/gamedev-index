@@ -52,6 +52,7 @@ let listings: Listing[] = [];
 let selectedCity: City | null = null;
 let tagInfoMap: Map<string, TagInfo> = new Map();
 let expandedFilters = false;
+let nominatimTimer: ReturnType<typeof setTimeout> | null = null;
 
 const MAX_VISIBLE_TAGS = 10;
 
@@ -282,6 +283,57 @@ function applyEventTagColors(): void {
   });
 }
 
+async function fetchNominatimCities(query: string, suggestions: HTMLElement): Promise<void> {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
+    const response = await fetch(url);
+    if (!response.ok) return;
+
+    const results = await response.json();
+    if (!results.length) return;
+
+    const nominatimCities: City[] = results.map((r: any) => ({
+      name: r.address?.city || r.address?.town || r.address?.village || r.name,
+      state: r.address?.state || '',
+      country: 'Germany',
+      coordinates: [parseFloat(r.lat), parseFloat(r.lon)] as [number, number],
+    }));
+
+    // Deduplicate by name
+    const seen = new Set<string>();
+    const unique = nominatimCities.filter((c) => {
+      if (seen.has(c.name)) return false;
+      seen.add(c.name);
+      return true;
+    });
+
+    suggestions.innerHTML = unique
+      .map(
+        (city) =>
+          `<div class="city-suggestion" data-city="${city.name}">${city.name}${city.state ? ', ' + city.state : ''}</div>`
+      )
+      .join('');
+    suggestions.classList.add('active');
+
+    suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
+      el.addEventListener('click', () => {
+        const cityName = (el as HTMLElement).dataset.city;
+        if (cityName) {
+          const city = unique.find((c) => c.name === cityName);
+          if (city) {
+            cityMap.set(city.name, city);
+          }
+          selectCity(cityName);
+          syncCityInputs(cityName);
+          suggestions.classList.remove('active');
+        }
+      });
+    });
+  } catch {
+    // Silently fail on network errors
+  }
+}
+
 function initCitySelector(): void {
   // Get all city inputs and their suggestion containers
   const citySelectors = document.querySelectorAll('.city-selector');
@@ -312,8 +364,16 @@ function initCitySelector(): void {
       );
 
       if (matches.length === 0) {
-        suggestions.classList.remove('active');
+        if (nominatimTimer) clearTimeout(nominatimTimer);
+        suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
+        suggestions.classList.add('active');
+        nominatimTimer = setTimeout(() => fetchNominatimCities(query, suggestions), 2000);
         return;
+      }
+
+      if (nominatimTimer) {
+        clearTimeout(nominatimTimer);
+        nominatimTimer = null;
       }
 
       suggestions.innerHTML = matches
