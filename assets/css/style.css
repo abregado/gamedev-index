@@ -401,7 +401,7 @@ body {
 .listing-name {
   color: #20b2aa;   
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
 }
 
 .listing:hover .listing-name {
@@ -640,7 +640,7 @@ body {
 }
 
 /* Site Footer */
-.site-footer {
+.footer-area {
   text-align: center;
   padding: 2rem 1rem;
   margin-top: 2rem;
@@ -648,12 +648,12 @@ body {
   font-size: 0.875rem;
 }
 
-.site-footer a {
+.footer-area a {
   color: #666;
   text-decoration: none;
 }
 
-.site-footer a:hover {
+.footer-area a:hover {
   color: #20b2aa;
   text-decoration: underline;
 }
@@ -749,6 +749,24 @@ body {
       font-weight: 600;
       margin: 0 0 1rem 0;
       color: #333;
+  }
+
+  .footer-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem 0.5rem;
+    margin-top: 1.25rem;
+    font-size: 0.8125rem;
+  }
+
+  .footer-area a {
+    display: inline-block;
+    padding: 0.25rem 0;
+  }
+
+  .footer-separator {
+    display: none;
   }
 
   .header-hero {
