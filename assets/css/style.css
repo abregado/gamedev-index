@@ -379,6 +379,7 @@ body {
 .listing-name {
   color: #20b2aa;   
   font-weight: 600;
+  font-size: 1.125rem;
 }
 
 .listing:hover .listing-name {
@@ -391,18 +392,17 @@ body {
 
 .listing-description {
   color: #666;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .listing-line-3 {
   display: inline;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   margin: 0.17rem 0 0.27rem 0;
 }
 
 .listing-location {
   color: #6a5acd;
-  font-size: 0.75rem;
   display: inline;
   padding-right: 0.5rem;
   font-weight: 600;
@@ -415,7 +415,6 @@ body {
 
 .listing-tag {
   padding: 0.125rem 0.5rem 0.125rem 0rem;
-  font-size: 0.75rem;
   font-weight: 600;
   text-transform: capitalize;
   color: #fff;
@@ -794,9 +793,17 @@ body {
     padding: 1.2rem 1rem;
   }
 
+  .listing-description{
+    font-size: 0.875rem;
+  }
+
   .listing-line-1 {
     gap: 0.5rem;
     padding-right: 0;
+  }
+
+  .listing-line-3{
+    font-size: 0.75rem;
   }
 
   .listing-name {
@@ -804,6 +811,7 @@ body {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-size: 1rem;
     max-width: 100%;
   }
 
