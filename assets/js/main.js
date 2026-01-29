@@ -296,8 +296,8 @@ function initCitySelector() {
                 suggestions.classList.remove('active');
                 return;
             }
-            const matches = cities.filter((city) => city.name.toLowerCase().includes(query) ||
-                city.state.toLowerCase().includes(query));
+            const matches = cities.filter((city) => city.name.toLowerCase().startsWith(query) ||
+                city.state.toLowerCase().startsWith(query));
             if (matches.length === 0) {
                 if (nominatimTimer)
                     clearTimeout(nominatimTimer);

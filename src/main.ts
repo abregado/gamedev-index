@@ -359,8 +359,8 @@ function initCitySelector(): void {
 
       const matches = cities.filter(
         (city) =>
-          city.name.toLowerCase().includes(query) ||
-          city.state.toLowerCase().includes(query)
+          city.name.toLowerCase().startsWith(query) ||
+          city.state.toLowerCase().startsWith(query)
       );
 
       if (matches.length === 0) {
