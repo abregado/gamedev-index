@@ -285,7 +285,7 @@ function applyEventTagColors(): void {
 
 async function fetchNominatimCities(query: string, suggestions: HTMLElement): Promise<void> {
   try {
-    const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(query)}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
+    const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(query + '*')}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
     const response = await fetch(url);
     if (!response.ok) return;
 
@@ -365,9 +365,13 @@ function initCitySelector(): void {
 
       if (matches.length === 0) {
         if (nominatimTimer) clearTimeout(nominatimTimer);
-        suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
-        suggestions.classList.add('active');
-        nominatimTimer = setTimeout(() => fetchNominatimCities(query, suggestions), 2000);
+        if (query.length >= 3) {
+          suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
+          suggestions.classList.add('active');
+          nominatimTimer = setTimeout(() => fetchNominatimCities(query, suggestions), 2000);
+        } else {
+          suggestions.classList.remove('active');
+        }
         return;
       }
 
