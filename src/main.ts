@@ -285,7 +285,7 @@ function applyEventTagColors(): void {
 
 async function fetchNominatimCities(query: string, suggestions: HTMLElement): Promise<void> {
   try {
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
+    const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(query)}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
     const response = await fetch(url);
     if (!response.ok) return;
 
@@ -405,10 +405,7 @@ function initCitySelector(): void {
           '.city-suggestion'
         ) as HTMLElement;
         if (firstSuggestion) {
-          const cityName = firstSuggestion.dataset.city;
-          selectCity(cityName || '');
-          syncCityInputs(cityName || '');
-          suggestions.classList.remove('active');
+          firstSuggestion.click();
         }
       }
     });

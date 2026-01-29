@@ -236,7 +236,7 @@ function applyEventTagColors() {
 }
 async function fetchNominatimCities(query, suggestions) {
     try {
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
+        const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(query)}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
         const response = await fetch(url);
         if (!response.ok)
             return;
@@ -331,10 +331,7 @@ function initCitySelector() {
             if (e.key === 'Enter') {
                 const firstSuggestion = suggestions.querySelector('.city-suggestion');
                 if (firstSuggestion) {
-                    const cityName = firstSuggestion.dataset.city;
-                    selectCity(cityName || '');
-                    syncCityInputs(cityName || '');
-                    suggestions.classList.remove('active');
+                    firstSuggestion.click();
                 }
             }
         });
