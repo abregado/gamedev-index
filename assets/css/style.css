@@ -205,30 +205,22 @@ body {
 
 .tag-filters-main {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 0.375rem;
-  height: 2.25rem;
-  align-items: center;
-  overflow: hidden;
-  padding: 0 1rem;
-}
-
-.tag-filters-expanded {
-  display: none;
   flex-wrap: wrap;
   gap: 0.375rem;
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
-  padding: 0.5rem 1rem 0 1rem;
-  border-top: 1px solid #eee;
+  align-items: flex-start;
+  padding: 0 0.5rem 0 1rem;
+  max-height: 2.15rem;
+  overflow: hidden;
 }
 
-.tag-filters-expanded.active {
-  display: flex;
+.tag-filters-main.expanded {
+  max-height: 100%;
 }
 
 .tag-filter {
   padding: 0.15rem 0.7rem 0.27rem 0.55rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
   font-size: 0.875rem;
   border: 1.7px solid;
   border-radius: 2rem;
@@ -812,13 +804,20 @@ body {
     height: 1.8rem;
   }
 
+  .tag-filter {
+    padding: 0.1rem 0.55rem 0.2rem 0.4rem;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
+    font-size: 0.75rem;
+  }
+
   .tag-filters-content {
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.1rem 0.5rem 0.5rem;
   }
 
   .tag-filters-main {
-    flex-wrap: wrap;
-    height: 4.5rem;
+    max-height: 3.7rem;
+    padding: 0 0.1rem;
   }
 
   .tag-filters-toggle {

@@ -54,8 +54,6 @@ let tagInfoMap: Map<string, TagInfo> = new Map();
 let expandedFilters = false;
 let nominatimTimer: ReturnType<typeof setTimeout> | null = null;
 
-const MAX_VISIBLE_TAGS = 10;
-
 document.addEventListener('DOMContentLoaded', () => {
   loadCities();
   initListings();
@@ -145,28 +143,15 @@ function initTagFilters(): void {
 
 function renderTagFilters(tags: TagInfo[]): void {
   const mainContainer = document.getElementById('tag-filters-main');
-  const expandedContainer = document.getElementById('tag-filters-expanded');
   const toggleButton = document.getElementById('tag-filters-toggle');
 
-  if (!mainContainer || !expandedContainer || !toggleButton) return;
+  if (!mainContainer || !toggleButton) return;
 
-  const mainTags = tags.slice(0, MAX_VISIBLE_TAGS);
-  const extraTags = tags.slice(MAX_VISIBLE_TAGS);
 
   // Render main tags
-  mainContainer.innerHTML = mainTags
+  mainContainer.innerHTML = tags
     .map((tag) => createTagButton(tag))
     .join('');
-
-  // Render extra tags
-  if (extraTags.length > 0) {
-    expandedContainer.innerHTML = extraTags
-      .map((tag) => createTagButton(tag))
-      .join('');
-    toggleButton.style.display = '';
-  } else {
-    toggleButton.style.display = 'none';
-  }
 
   // Add click handlers
   document.querySelectorAll('.tag-filter').forEach((el) => {
@@ -180,11 +165,13 @@ function renderTagFilters(tags: TagInfo[]): void {
     });
   });
 
+  // Toggle button style
+  toggleButton.style.display = '';
+
   // Toggle button handler
   toggleButton.addEventListener('click', () => {
     expandedFilters = !expandedFilters;
-    expandedContainer.classList.toggle('active', expandedFilters);
-    toggleButton.classList.toggle('expanded', expandedFilters);
+    mainContainer.classList.toggle('expanded', expandedFilters);
   });
 }
 
