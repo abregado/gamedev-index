@@ -47,6 +47,8 @@ const TAG_COLORS = [
 ];
 
 const GEONAMES_USERNAME = 'Rules_As_Intended';
+const API_TIMEOUT = 5000; // 5 seconds timeout for API call
+const SEARCH_DEBOUNCE = 500; // 500ms debounce before API call
 
 let cities: City[] = [];
 let cityMap: Map<string, City> = new Map();
@@ -55,6 +57,7 @@ let selectedCity: City | null = null;
 let tagInfoMap: Map<string, TagInfo> = new Map();
 let expandedFilters = false;
 let cityRetrievalTimer: ReturnType<typeof setTimeout> | null = null;
+let localFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   loadCities();
@@ -272,37 +275,34 @@ function applyEventTagColors(): void {
   });
 }
 
-async function fetchGeoNamesCities(query: string, suggestions: HTMLElement): Promise<void> {
+async function fetchGeoNamesCities(query: string, suggestions: HTMLElement): Promise<boolean> {
   try {
     // GeoNames search API with parameters:
     // - name_startsWith: city name prefix
-    // - country: DE (Germany)
     // - maxRows: limit results
     // - featureClass: P (cities, towns)
     // - username: your GeoNames username
     const url = `https://secure.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(query)}&maxRows=10&featureClass=P&username=${GEONAMES_USERNAME}&orderby=population`;
     
     const response = await fetch(url);
-    if (!response.ok) return;
+    if (!response.ok) return false;
 
     const data = await response.json();
     
     // Check for GeoNames API errors
     if (data.status) {
       console.error('GeoNames API error:', data.status.message);
-      suggestions.innerHTML = '<div class="city-suggestion-loading" style="color: #dc3545;">Search unavailable</div>';
-      return;
+      return false;
     }
     
     if (!data.geonames || data.geonames.length === 0) {
-      suggestions.classList.remove('active');
-      return;
+      return false;
     }
 
     const geonamesCities: City[] = data.geonames.map((result: any) => ({
       name: result.name,
       state: result.adminName1 || '', // State/region name
-      country: 'Germany',
+      country: result.countryName || 'Germany',
       coordinates: [parseFloat(result.lat), parseFloat(result.lng)] as [number, number],
     }));
 
@@ -314,31 +314,50 @@ async function fetchGeoNamesCities(query: string, suggestions: HTMLElement): Pro
       return true;
     });
 
-    suggestions.innerHTML = unique
-      .map(
-        (city) =>
-          `<div class="city-suggestion" data-city="${city.name}">${city.name}${city.state ? ', ' + city.state : ''}</div>`
-      )
-      .join('');
-    suggestions.classList.add('active');
-
-    suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
-      el.addEventListener('click', () => {
-        const cityName = (el as HTMLElement).dataset.city;
-        if (cityName) {
-          const city = unique.find((c) => c.name === cityName);
-          if (city) {
-            cityMap.set(city.name, city);
-          }
-          selectCity(cityName);
-          syncCityInputs(cityName);
-          suggestions.classList.remove('active');
-        }
-      });
-    });
+    renderCitySuggestions(unique, suggestions);
+    return true;
   } catch (error) {
     console.error('GeoNames fetch error:', error);
-    // Silently fail on network errors
+    return false;
+  }
+}
+
+function renderCitySuggestions(citiesList: City[], suggestions: HTMLElement): void {
+  suggestions.innerHTML = citiesList
+    .map(
+      (city) =>
+        `<div class="city-suggestion" data-city="${city.name}">${city.name}${city.state ? ', ' + city.state : ''}</div>`
+    )
+    .join('');
+  suggestions.classList.add('active');
+
+  suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
+    el.addEventListener('click', () => {
+      const cityName = (el as HTMLElement).dataset.city;
+      if (cityName) {
+        const city = citiesList.find((c) => c.name === cityName);
+        if (city) {
+          cityMap.set(city.name, city);
+        }
+        selectCity(cityName);
+        syncCityInputs(cityName);
+        suggestions.classList.remove('active');
+      }
+    });
+  });
+}
+
+function showLocalCities(query: string, suggestions: HTMLElement): void {
+  const matches = cities.filter(
+    (city) =>
+      city.name.toLowerCase().startsWith(query) ||
+      city.state.toLowerCase().startsWith(query)
+  );
+
+  if (matches.length > 0) {
+    renderCitySuggestions(matches.slice(0, 10), suggestions);
+  } else {
+    suggestions.classList.remove('active');
   }
 }
 
@@ -365,47 +384,38 @@ function initCitySelector(): void {
         return;
       }
 
-      const matches = cities.filter(
-        (city) =>
-          city.name.toLowerCase().startsWith(query) ||
-          city.state.toLowerCase().startsWith(query)
-      );
+      // Clear any existing timers
+      if (cityRetrievalTimer) clearTimeout(cityRetrievalTimer);
+      if (localFallbackTimer) clearTimeout(localFallbackTimer);
 
-      if (matches.length === 0) {
-        if (cityRetrievalTimer) clearTimeout(cityRetrievalTimer);
-        if (query.length >= 3) {
-          suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
-          suggestions.classList.add('active');
-          // Reduced delay from 2000ms to 500ms for faster response
-          cityRetrievalTimer = setTimeout(() => fetchGeoNamesCities(query, suggestions), 500);
-        } else {
-          suggestions.classList.remove('active');
-        }
-        return;
+      if (query.length >= 3) {
+        // Show loading indicator immediately
+        suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
+        suggestions.classList.add('active');
+
+        let apiResolved = false;
+
+        // Wait 500ms before making API call (debounce)
+        cityRetrievalTimer = setTimeout(() => {
+          // Start API call after debounce delay
+          fetchGeoNamesCities(query, suggestions).then((success) => {
+            apiResolved = true;
+            // If API failed or returned no results, try local fallback
+            if (!success) {
+              showLocalCities(query, suggestions);
+            }
+          });
+
+          // Set timeout to show local results after 5 seconds if API hasn't resolved
+          localFallbackTimer = setTimeout(() => {
+            if (!apiResolved) {
+              showLocalCities(query, suggestions);
+            }
+          }, API_TIMEOUT);
+        }, SEARCH_DEBOUNCE);
+      } else {
+        suggestions.classList.remove('active');
       }
-
-      if (cityRetrievalTimer) {
-        clearTimeout(cityRetrievalTimer);
-        cityRetrievalTimer = null;
-      }
-
-      suggestions.innerHTML = matches
-        .slice(0, 10)
-        .map(
-          (city) =>
-            `<div class="city-suggestion" data-city="${city.name}">${city.name}, ${city.state}</div>`
-        )
-        .join('');
-      suggestions.classList.add('active');
-
-      suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
-        el.addEventListener('click', () => {
-          const cityName = (el as HTMLElement).dataset.city;
-          selectCity(cityName || '');
-          syncCityInputs(cityName || '');
-          suggestions.classList.remove('active');
-        });
-      });
     });
 
     input.addEventListener('blur', () => {
