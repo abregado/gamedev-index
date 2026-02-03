@@ -46,13 +46,15 @@ const TAG_COLORS = [
   '#9333ea', // purple
 ];
 
+const GEONAMES_USERNAME = 'Rules_As_Intended';
+
 let cities: City[] = [];
 let cityMap: Map<string, City> = new Map();
 let listings: Listing[] = [];
 let selectedCity: City | null = null;
 let tagInfoMap: Map<string, TagInfo> = new Map();
 let expandedFilters = false;
-let nominatimTimer: ReturnType<typeof setTimeout> | null = null;
+let cityRetrievalTimer: ReturnType<typeof setTimeout> | null = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   loadCities();
@@ -270,25 +272,43 @@ function applyEventTagColors(): void {
   });
 }
 
-async function fetchNominatimCities(query: string, suggestions: HTMLElement): Promise<void> {
+async function fetchGeoNamesCities(query: string, suggestions: HTMLElement): Promise<void> {
   try {
-    const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(query + '*')}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
+    // GeoNames search API with parameters:
+    // - name_startsWith: city name prefix
+    // - country: DE (Germany)
+    // - maxRows: limit results
+    // - featureClass: P (cities, towns)
+    // - username: your GeoNames username
+    const url = `https://secure.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(query)}&maxRows=10&featureClass=P&username=${GEONAMES_USERNAME}&orderby=population`;
+    
     const response = await fetch(url);
     if (!response.ok) return;
 
-    const results = await response.json();
-    if (!results.length) return;
+    const data = await response.json();
+    
+    // Check for GeoNames API errors
+    if (data.status) {
+      console.error('GeoNames API error:', data.status.message);
+      suggestions.innerHTML = '<div class="city-suggestion-loading" style="color: #dc3545;">Search unavailable</div>';
+      return;
+    }
+    
+    if (!data.geonames || data.geonames.length === 0) {
+      suggestions.classList.remove('active');
+      return;
+    }
 
-    const nominatimCities: City[] = results.map((r: any) => ({
-      name: r.address?.city || r.address?.town || r.address?.village || r.name,
-      state: r.address?.state || '',
+    const geonamesCities: City[] = data.geonames.map((result: any) => ({
+      name: result.name,
+      state: result.adminName1 || '', // State/region name
       country: 'Germany',
-      coordinates: [parseFloat(r.lat), parseFloat(r.lon)] as [number, number],
+      coordinates: [parseFloat(result.lat), parseFloat(result.lng)] as [number, number],
     }));
 
     // Deduplicate by name
     const seen = new Set<string>();
-    const unique = nominatimCities.filter((c) => {
+    const unique = geonamesCities.filter((c) => {
       if (seen.has(c.name)) return false;
       seen.add(c.name);
       return true;
@@ -316,7 +336,8 @@ async function fetchNominatimCities(query: string, suggestions: HTMLElement): Pr
         }
       });
     });
-  } catch {
+  } catch (error) {
+    console.error('GeoNames fetch error:', error);
     // Silently fail on network errors
   }
 }
@@ -351,20 +372,21 @@ function initCitySelector(): void {
       );
 
       if (matches.length === 0) {
-        if (nominatimTimer) clearTimeout(nominatimTimer);
+        if (cityRetrievalTimer) clearTimeout(cityRetrievalTimer);
         if (query.length >= 3) {
           suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
           suggestions.classList.add('active');
-          nominatimTimer = setTimeout(() => fetchNominatimCities(query, suggestions), 2000);
+          // Reduced delay from 2000ms to 500ms for faster response
+          cityRetrievalTimer = setTimeout(() => fetchGeoNamesCities(query, suggestions), 500);
         } else {
           suggestions.classList.remove('active');
         }
         return;
       }
 
-      if (nominatimTimer) {
-        clearTimeout(nominatimTimer);
-        nominatimTimer = null;
+      if (cityRetrievalTimer) {
+        clearTimeout(cityRetrievalTimer);
+        cityRetrievalTimer = null;
       }
 
       suggestions.innerHTML = matches
