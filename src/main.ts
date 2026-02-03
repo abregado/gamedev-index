@@ -47,8 +47,8 @@ const TAG_COLORS = [
 ];
 
 const GEONAMES_USERNAME = 'Rules_As_Intended';
-const API_TIMEOUT = 5000; // 5 seconds timeout for API call
-const SEARCH_DEBOUNCE = 500; // 500ms debounce before API call
+const API_TIMEOUT = 5000; // timeout for API call
+const SEARCH_DEBOUNCE_DURATION = 1000; // debounce before API call
 
 let cities: City[] = [];
 let cityMap: Map<string, City> = new Map();
@@ -281,9 +281,12 @@ async function fetchGeoNamesCities(query: string, suggestions: HTMLElement): Pro
     // - name_startsWith: city name prefix
     // - maxRows: limit results
     // - featureClass: P (cities, towns)
-    // - username: your GeoNames username
-    const url = `https://secure.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(query)}&maxRows=10&featureClass=P&username=${GEONAMES_USERNAME}&orderby=population`;
-    
+    // - continentCode: EU (Europe only)
+    // - style: full (includes alternateNames with localized names)
+    // - lang: de (German language preference, which means e.g. the state will be in German, if available)
+    // - username: GeoNames username
+    const url = `https://secure.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(query)}&maxRows=10&featureClass=P&continentCode=EU&style=full&lang=de&username=${GEONAMES_USERNAME}&orderby=population`;
+
     const response = await fetch(url);
     if (!response.ok) return false;
 
@@ -299,12 +302,34 @@ async function fetchGeoNamesCities(query: string, suggestions: HTMLElement): Pro
       return false;
     }
 
-    const geonamesCities: City[] = data.geonames.map((result: any) => ({
-      name: result.name,
-      state: result.adminName1 || '', // State/region name
-      country: result.countryName || 'Germany',
-      coordinates: [parseFloat(result.lat), parseFloat(result.lng)] as [number, number],
-    }));
+    const geonamesCities: City[] = data.geonames.map((result: any) => {
+      // Try to get German name from alternateNames array
+      let cityName = result.name; // Default to main name
+      
+      if (result.alternateNames && Array.isArray(result.alternateNames)) {
+        // First try to find a preferred German name
+        const preferredGerman = result.alternateNames.find((alt: any) => 
+          alt.lang === 'de' && alt.isPreferredName
+        );
+        
+        if (preferredGerman) {
+          cityName = preferredGerman.name;
+        } else {
+          // Fallback to any German name if no preferred one exists
+          const anyGerman = result.alternateNames.find((alt: any) => alt.lang === 'de');
+          if (anyGerman) {
+            cityName = anyGerman.name;
+          }
+        }
+      }
+      
+      return {
+        name: cityName,
+        state: result.adminName1 || '', // State/region name
+        country: result.countryName || 'Germany',
+        coordinates: [parseFloat(result.lat), parseFloat(result.lng)] as [number, number],
+      };
+    });
 
     // Deduplicate by name
     const seen = new Set<string>();
@@ -397,7 +422,7 @@ function initCitySelector(): void {
 
         let apiResolved = false;
 
-        // Wait 500ms before making API call (debounce)
+        // Wait a bit before making API call (debounce)
         cityRetrievalTimer = setTimeout(() => {
           // Start API call after debounce delay
           fetchGeoNamesCities(query, suggestions).then((success) => {
@@ -414,7 +439,7 @@ function initCitySelector(): void {
               showLocalCities(query, suggestions);
             }
           }, API_TIMEOUT);
-        }, SEARCH_DEBOUNCE);
+        }, SEARCH_DEBOUNCE_DURATION);
       } else {
         suggestions.classList.remove('active');
       }
