@@ -48,7 +48,7 @@ const TAG_COLORS = [
 
 const GEONAMES_USERNAME = 'Rules_As_Intended';
 const API_TIMEOUT = 5000; // timeout for API call
-const SEARCH_DEBOUNCE_DURATION = 1000; // debounce before API call
+const SEARCH_DEBOUNCE_DURATION = 750; // debounce before API call
 
 let cities: City[] = [];
 let cityMap: Map<string, City> = new Map();
@@ -58,6 +58,7 @@ let tagInfoMap: Map<string, TagInfo> = new Map();
 let expandedFilters = false;
 let cityRetrievalTimer: ReturnType<typeof setTimeout> | null = null;
 let localFallbackTimer: ReturnType<typeof setTimeout> | null = null;
+let selectedSuggestionIndex: number = -1;
 
 document.addEventListener('DOMContentLoaded', () => {
   loadCities();
@@ -376,6 +377,10 @@ function renderCitySuggestions(citiesList: City[], suggestions: HTMLElement): vo
     .join('');
   suggestions.classList.add('active');
 
+  // Pre-select the first item
+  selectedSuggestionIndex = 0;
+  updateSuggestionSelection(suggestions);
+
   suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
     el.addEventListener('click', () => {
       const cityName = (el as HTMLElement).dataset.city;
@@ -387,8 +392,22 @@ function renderCitySuggestions(citiesList: City[], suggestions: HTMLElement): vo
         selectCity(cityName);
         syncCityInputs(cityName);
         suggestions.classList.remove('active');
+        selectedSuggestionIndex = -1;
       }
     });
+  });
+}
+
+function updateSuggestionSelection(suggestions: HTMLElement): void {
+  const suggestionElements = suggestions.querySelectorAll('.city-suggestion');
+  suggestionElements.forEach((el, index) => {
+    if (index === selectedSuggestionIndex) {
+      el.classList.add('selected');
+      // Scroll into view if needed
+      el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } else {
+      el.classList.remove('selected');
+    }
   });
 }
 
@@ -428,6 +447,7 @@ function initCitySelector(): void {
 
       if (query.length < 1) {
         suggestions.classList.remove('active');
+        selectedSuggestionIndex = -1;
         return;
       }
 
@@ -439,6 +459,7 @@ function initCitySelector(): void {
         // Show loading indicator immediately
         suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
         suggestions.classList.add('active');
+        selectedSuggestionIndex = -1;
 
         let apiResolved = false;
 
@@ -462,21 +483,50 @@ function initCitySelector(): void {
         }, SEARCH_DEBOUNCE_DURATION);
       } else {
         suggestions.classList.remove('active');
+        selectedSuggestionIndex = -1;
       }
     });
 
     input.addEventListener('blur', () => {
-      setTimeout(() => suggestions.classList.remove('active'), 200);
+      setTimeout(() => {
+        suggestions.classList.remove('active');
+        selectedSuggestionIndex = -1;
+      }, 200);
     });
 
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const firstSuggestion = suggestions.querySelector(
-          '.city-suggestion'
-        ) as HTMLElement;
-        if (firstSuggestion) {
-          firstSuggestion.click();
+      const suggestionElements = suggestions.querySelectorAll('.city-suggestion');
+      const isActive = suggestions.classList.contains('active');
+      const hasResults = suggestionElements.length > 0;
+
+      if (!isActive || !hasResults) {
+        if (e.key === 'Enter') {
+          // If no dropdown, just use current input value
+          e.preventDefault();
         }
+        return;
+      }
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedSuggestionIndex = Math.min(
+          selectedSuggestionIndex + 1,
+          suggestionElements.length - 1
+        );
+        updateSuggestionSelection(suggestions);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0);
+        updateSuggestionSelection(suggestions);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestionElements.length) {
+          (suggestionElements[selectedSuggestionIndex] as HTMLElement).click();
+        }
+      } else if (e.key === 'Escape') {
+        suggestions.classList.remove('active');
+        selectedSuggestionIndex = -1;
+        input.blur();
       }
     });
   });
@@ -786,3 +836,4 @@ function formatDistance(km: number): string {
     return `${Math.round(km / 10) * 10}&nbsp;km`;
   }
 }
+

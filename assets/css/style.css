@@ -165,6 +165,10 @@ body {
   background: #f0f0f0;
 }
 
+.city-suggestion.selected {
+  background-color: #e4e4e4;
+}
+
 .city-suggestion-loading {
   padding: 0.5rem 1rem;
   color: #888;
