@@ -357,7 +357,9 @@ function showLocalCities(query: string, suggestions: HTMLElement): void {
   if (matches.length > 0) {
     renderCitySuggestions(matches.slice(0, 10), suggestions);
   } else {
-    suggestions.classList.remove('active');
+    // Show all cities when no matches found, sorted alphabetically by name
+    const sortedCities = [...cities].sort((a, b) => a.name.localeCompare(b.name));
+    renderCitySuggestions(sortedCities, suggestions);
   }
 }
 
