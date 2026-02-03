@@ -305,6 +305,7 @@ async function fetchGeoNamesCities(query: string, suggestions: HTMLElement): Pro
     const geonamesCities: City[] = data.geonames.map((result: any) => {
       // Try to get German name from alternateNames array
       let cityName = result.name; // Default to main name
+      let englishName = '';
       
       if (result.alternateNames && Array.isArray(result.alternateNames)) {
         // First try to find a preferred German name
@@ -320,6 +321,25 @@ async function fetchGeoNamesCities(query: string, suggestions: HTMLElement): Pro
           if (anyGerman) {
             cityName = anyGerman.name;
           }
+        }
+
+        // Find English name
+        const preferredEnglish = result.alternateNames.find((alt: any) => 
+          alt.lang === 'en' && alt.isPreferredName
+        );
+        
+        if (preferredEnglish) {
+          englishName = preferredEnglish.name;
+        } else {
+          const anyEnglish = result.alternateNames.find((alt: any) => alt.lang === 'en');
+          if (anyEnglish) {
+            englishName = anyEnglish.name;
+          }
+        }
+
+        // If both names exist and differ, append English in parentheses
+        if (englishName && cityName.toLowerCase() !== englishName.toLowerCase()) {
+          cityName = `${cityName} (${englishName})`;
         }
       }
       
