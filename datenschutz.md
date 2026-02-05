@@ -59,7 +59,7 @@ robots: noindex, nofollow
 
 
 
-  <h2>Hosting</h2>
+  <h2>2. Hosting</h2>
 
 <p>Unser Hoster erhebt in sog. Logfiles folgende Daten, die Ihr Browser &uuml;bermittelt:</p>
 <p>IP-Adresse, die Adresse der vorher besuchten Website (Referer Anfrage-Header), Datum und Uhrzeit der Anfrage, Zeitzonendifferenz zur Greenwich Mean Time, Inhalt der Anforderung, HTTP-Statuscode, &uuml;bertragene Datenmenge, Website, von der die Anforderung kommt und Informationen zu Browser und Betriebssystem.</p>
@@ -74,7 +74,7 @@ robots: noindex, nofollow
 <p>Die Verarbeitung der unter diesem Abschnitt angegebenen Daten ist weder gesetzlich noch vertraglich vorgeschrieben. Die Funktionsf&auml;higkeit der Website ist ohne die Verarbeitung nicht gew&auml;hrleistet.</p>
 <p>GitHub hat Compliance-Ma&szlig;nahmen f&uuml;r internationale Daten&uuml;bermittlungen umgesetzt. Diese gelten f&uuml;r alle weltweiten Aktivit&auml;ten, bei denen GitHub personenbezogene Daten von nat&uuml;rlichen Personen in der EU verarbeitet. Diese Ma&szlig;nahmen basieren auf den EU-Standardvertragsklauseln (SCCs). Weitere Informationen finden Sie unter: <a href="https://docs.github.com/en/free-pro-team@latest/github/site-policy/github-data-protection-addendum#attachment-1--the-standard-contractual-clauses-processors">https://docs.github.com/en/free-pro-team@latest/github/site-policy/github-data-protection-addendum#attachment-1&ndash;the-standard-contractual-clauses-processors</a></p>
 
-  <h2>Allgemeine Hinweise und Pflichtinformationen</h2>
+  <h2>3. Allgemeine Hinweise und Pflichtinformationen</h2>
 
   <h3>Datenschutz</h3>
 
@@ -96,7 +96,7 @@ robots: noindex, nofollow
 </ul>
 <p>(Formulierung der Betroffenenrechte zur Verfügung gestellt von: <a href="https://dr-dsgvo.de/artikel-15-dsgvo/">dr-dsgvo.de</a>)</p>
 
-  <h2>Externe Links</h2>
+  <h2>4. Externe Links</h2>
 
   <p>
     Diese Website enthält Links zu externen Websites Dritter (Event-Websites). Beim Anklicken dieser Links verlassen Sie unsere Website. Wir haben keinen Einfluss auf die Datenschutzpraktiken dieser externen Websites und übernehmen keine Verantwortung für deren Inhalte oder Datenschutzpraktiken. Bitte informieren Sie sich auf den jeweiligen Websites über deren Datenschutzbestimmungen.
