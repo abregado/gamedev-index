@@ -29,7 +29,7 @@ robots: noindex, nofollow
   <p>
     Ben Buckton<br>
     Steinring 113<br>
-    Bochum 44789<br>
+    44789 Bochum<br>
     Tel.: +49 157 567 27 430
   </p>
   
