@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Impressum
+robots: noindex, nofollow
 ---
 
 <article class="legal-page">
@@ -13,49 +14,44 @@ title: Impressum
   {% include mission.html %}
 
   <p>
-  If you would like to add an entry, please <a href="{{ '/add-entry/' | relative_url }}">contact us here</a>
+  If you would like to add an entry, please <a href="{{ '/add-entry/' | relative_url }}">have a look here.</a> <br>
+  (The information below is only provided to comply with legal requirements for German websites)
+  
   </p>
 
-  <h2>Angaben gemäß § 5 TMG</h2>
+  <h2>Angaben gemäß § 5 DDG</h2>
+
+  <p>
+  Diese Website wird betrieben von:
+  </p>
+
 
   <p>
     Ben Buckton<br>
-    Roman Uhlig
+    Steinring 113<br>
+    Bochum 44789<br>
+    Tel.: +49 157 567 27 430
+  </p>
+  
+  <p>
+    Roman Uhlig<br>
+    Martinstraße 37<br>
+    64285 Darmstadt<br>
+    Tel.: +49 151 405 44 204 
   </p>
 
-  <h2>Kontakt</h2>
-
-  <p>
-    E-Mail: <a href="mailto:contact@gamedevtreff.com">contact@gamedevtreff.com</a>
-  </p>
-
-  <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
-
-  <p>
-    Ben Buckton<br>
-    Roman Uhlig
+  <p>  
+    E-Mail Kontakt: <a href="mailto:contact@gamedevtreff.com">contact@gamedevtreff.com</a>
   </p>
 
   <h2>Haftungsausschluss</h2>
 
-  <h3>Haftung für Inhalte</h3>
-
   <p>
-    Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+     Alle Angaben und Inhalte dieses Angebotes wurden sorgfältig erstellt und geprüft. Wir bemühen uns, das Angebot aktuell, vollständig und frei von inhaltlichen Fehlern anzubieten. Dennoch kann trotz größter Sorgfalt das Auftreten von Fehlern nicht völlig ausgeschlossen werden, so dass eine Garantie für die Vollständigkeit, Richtigkeit, Aktualität und permanente Verfügbarkeit nicht übernommen wird.
   </p>
 
   <p>
-    Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
-  </p>
-
-  <h3>Haftung für Links</h3>
-
-  <p>
-    Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar.
-  </p>
-
-  <p>
-    Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
-  </p>
+    Der Zugang und die Benutzung dieser Website geschehen auf eigene Gefahr des Nutzers. Wir übernehmen keinerlei Haftung für Schäden, die angeblich durch den oder in Verbindung mit dem Zugang und/oder der Benutzung dieser Website aufgetreten sind.   
+    </p>
 
 </article>

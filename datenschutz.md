@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Datenschutzerklärung
+robots: noindex, nofollow
 ---
 
 <article class="legal-page">
