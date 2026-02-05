@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Add Entry
+robots: noindex, nofollow
 ---
 
 <article class="info-page">
