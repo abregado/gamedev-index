@@ -9,7 +9,6 @@ interface Listing {
   element: HTMLElement;
   cities: string[];
   tags: string[];
-  content: string;
   title: string;
 }
 
@@ -67,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCitySelector();
   initHeaderBehavior();
   handleUrlParams();
-  updateDescriptions();
   applyTagColors();
   applyEventTagColors();
   applyFilters();   
@@ -89,14 +87,12 @@ function initListings(): void {
   items.forEach((item) => {
     const citiesAttr = item.dataset.cities;
     const tagsAttr = item.dataset.tags;
-    const contentAttr = item.dataset.content;
     const titleAttr = item.dataset.title;
 
     listings.push({
       element: item,
       cities: citiesAttr ? JSON.parse(citiesAttr) : [],
       tags: tagsAttr ? JSON.parse(tagsAttr) : [],
-      content: contentAttr || '',
       title: titleAttr || '',
     });
   });
@@ -638,27 +634,6 @@ function handleUrlParams(): void {
   }
 }
 
-function updateDescriptions(): void {
-  listings.forEach((listing) => {
-    const descCell = listing.element.querySelector('.listing-description');
-    if (!descCell) return;
-
-    const firstSentence = extractFirstSentence(listing.content);
-    descCell.textContent = firstSentence;
-  });
-}
-
-function extractFirstSentence(content: string): string {
-  const trimmed = content.trim();
-  const match = trimmed.match(/^[^.!?]*[.!?]/);
-  if (match) {
-    return match[0].trim();
-  }
-  if (trimmed.length > 100) {
-    return trimmed.substring(0, 100) + '...';
-  }
-  return trimmed;
-}
 
 function updateLocations(): void {
   listings.forEach((listing) => {

@@ -21,14 +21,18 @@ const TAG_COLORS = [
     '#e11d48', // rose
     '#9333ea', // purple
 ];
+const GEONAMES_USERNAME = 'Rules_As_Intended';
+const API_TIMEOUT = 5000; // timeout for API call
+const SEARCH_DEBOUNCE_DURATION = 750; // debounce before API call
 let cities = [];
 let cityMap = new Map();
 let listings = [];
 let selectedCity = null;
 let tagInfoMap = new Map();
 let expandedFilters = false;
-let nominatimTimer = null;
-const MAX_VISIBLE_TAGS = 10;
+let cityRetrievalTimer = null;
+let localFallbackTimer = null;
+let selectedSuggestionIndex = -1;
 document.addEventListener('DOMContentLoaded', () => {
     loadCities();
     initListings();
@@ -36,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initCitySelector();
     initHeaderBehavior();
     handleUrlParams();
-    updateDescriptions();
     applyTagColors();
     applyEventTagColors();
     applyFilters();
@@ -56,13 +59,11 @@ function initListings() {
     items.forEach((item) => {
         const citiesAttr = item.dataset.cities;
         const tagsAttr = item.dataset.tags;
-        const contentAttr = item.dataset.content;
         const titleAttr = item.dataset.title;
         listings.push({
             element: item,
             cities: citiesAttr ? JSON.parse(citiesAttr) : [],
             tags: tagsAttr ? JSON.parse(tagsAttr) : [],
-            content: contentAttr || '',
             title: titleAttr || '',
         });
     });
@@ -108,26 +109,13 @@ function initTagFilters() {
 }
 function renderTagFilters(tags) {
     const mainContainer = document.getElementById('tag-filters-main');
-    const expandedContainer = document.getElementById('tag-filters-expanded');
     const toggleButton = document.getElementById('tag-filters-toggle');
-    if (!mainContainer || !expandedContainer || !toggleButton)
+    if (!mainContainer || !toggleButton)
         return;
-    const mainTags = tags.slice(0, MAX_VISIBLE_TAGS);
-    const extraTags = tags.slice(MAX_VISIBLE_TAGS);
     // Render main tags
-    mainContainer.innerHTML = mainTags
+    mainContainer.innerHTML = tags
         .map((tag) => createTagButton(tag))
         .join('');
-    // Render extra tags
-    if (extraTags.length > 0) {
-        expandedContainer.innerHTML = extraTags
-            .map((tag) => createTagButton(tag))
-            .join('');
-        toggleButton.style.display = '';
-    }
-    else {
-        toggleButton.style.display = 'none';
-    }
     // Add click handlers
     document.querySelectorAll('.tag-filter').forEach((el) => {
         el.addEventListener('click', () => {
@@ -139,11 +127,12 @@ function renderTagFilters(tags) {
             }
         });
     });
+    // Toggle button style
+    toggleButton.style.display = '';
     // Toggle button handler
     toggleButton.addEventListener('click', () => {
         expandedFilters = !expandedFilters;
-        expandedContainer.classList.toggle('active', expandedFilters);
-        toggleButton.classList.toggle('expanded', expandedFilters);
+        mainContainer.classList.toggle('expanded', expandedFilters);
     });
 }
 function getTagIcon(state) {
@@ -234,50 +223,132 @@ function applyEventTagColors() {
         }
     });
 }
-async function fetchNominatimCities(query, suggestions) {
+async function fetchGeoNamesCities(query, suggestions) {
     try {
-        const url = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(query + '*')}&countrycodes=de&format=json&limit=10&featuretype=city&addressdetails=1`;
+        // GeoNames search API with parameters:
+        // - name_startsWith: city name prefix
+        // - maxRows: limit results
+        // - featureClass: P (cities, towns)
+        // - continentCode: EU (Europe only)
+        // - style: full (includes alternateNames with localized names)
+        // - lang: de (German language preference, which means e.g. the state will be in German, if available)
+        // - username: GeoNames username
+        const url = `https://secure.geonames.org/searchJSON?name_startsWith=${encodeURIComponent(query)}&maxRows=10&featureClass=P&continentCode=EU&style=full&lang=de&username=${GEONAMES_USERNAME}&orderby=population`;
         const response = await fetch(url);
         if (!response.ok)
-            return;
-        const results = await response.json();
-        if (!results.length)
-            return;
-        const nominatimCities = results.map((r) => ({
-            name: r.address?.city || r.address?.town || r.address?.village || r.name,
-            state: r.address?.state || '',
-            country: 'Germany',
-            coordinates: [parseFloat(r.lat), parseFloat(r.lon)],
-        }));
+            return false;
+        const data = await response.json();
+        // Check for GeoNames API errors
+        if (data.status) {
+            console.error('GeoNames API error:', data.status.message);
+            return false;
+        }
+        if (!data.geonames || data.geonames.length === 0) {
+            return false;
+        }
+        const geonamesCities = data.geonames.map((result) => {
+            // Try to get German name from alternateNames array
+            let cityName = result.name; // Default to main name
+            let englishName = '';
+            if (result.alternateNames && Array.isArray(result.alternateNames)) {
+                // First try to find a preferred German name
+                const preferredGerman = result.alternateNames.find((alt) => alt.lang === 'de' && alt.isPreferredName);
+                if (preferredGerman) {
+                    cityName = preferredGerman.name;
+                }
+                else {
+                    // Fallback to any German name if no preferred one exists
+                    const anyGerman = result.alternateNames.find((alt) => alt.lang === 'de');
+                    if (anyGerman) {
+                        cityName = anyGerman.name;
+                    }
+                }
+                // Find English name
+                const preferredEnglish = result.alternateNames.find((alt) => alt.lang === 'en' && alt.isPreferredName);
+                if (preferredEnglish) {
+                    englishName = preferredEnglish.name;
+                }
+                else {
+                    const anyEnglish = result.alternateNames.find((alt) => alt.lang === 'en');
+                    if (anyEnglish) {
+                        englishName = anyEnglish.name;
+                    }
+                }
+                // If both names exist and differ, append English in parentheses
+                if (englishName && cityName.toLowerCase() !== englishName.toLowerCase()) {
+                    cityName = `${cityName} (${englishName})`;
+                }
+            }
+            return {
+                name: cityName,
+                state: result.adminName1 || '', // State/region name
+                country: result.countryName || 'Germany',
+                coordinates: [parseFloat(result.lat), parseFloat(result.lng)],
+            };
+        });
         // Deduplicate by name
         const seen = new Set();
-        const unique = nominatimCities.filter((c) => {
+        const unique = geonamesCities.filter((c) => {
             if (seen.has(c.name))
                 return false;
             seen.add(c.name);
             return true;
         });
-        suggestions.innerHTML = unique
-            .map((city) => `<div class="city-suggestion" data-city="${city.name}">${city.name}${city.state ? ', ' + city.state : ''}</div>`)
-            .join('');
-        suggestions.classList.add('active');
-        suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
-            el.addEventListener('click', () => {
-                const cityName = el.dataset.city;
-                if (cityName) {
-                    const city = unique.find((c) => c.name === cityName);
-                    if (city) {
-                        cityMap.set(city.name, city);
-                    }
-                    selectCity(cityName);
-                    syncCityInputs(cityName);
-                    suggestions.classList.remove('active');
-                }
-            });
-        });
+        renderCitySuggestions(unique, suggestions);
+        return true;
     }
-    catch {
-        // Silently fail on network errors
+    catch (error) {
+        console.error('GeoNames fetch error:', error);
+        return false;
+    }
+}
+function renderCitySuggestions(citiesList, suggestions) {
+    suggestions.innerHTML = citiesList
+        .map((city) => `<div class="city-suggestion" data-city="${city.name}">${city.name}${city.state ? ', ' + city.state : ''}</div>`)
+        .join('');
+    suggestions.classList.add('active');
+    // Pre-select the first item
+    selectedSuggestionIndex = 0;
+    updateSuggestionSelection(suggestions);
+    suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
+        el.addEventListener('click', () => {
+            const cityName = el.dataset.city;
+            if (cityName) {
+                const city = citiesList.find((c) => c.name === cityName);
+                if (city) {
+                    cityMap.set(city.name, city);
+                }
+                selectCity(cityName);
+                syncCityInputs(cityName);
+                suggestions.classList.remove('active');
+                selectedSuggestionIndex = -1;
+            }
+        });
+    });
+}
+function updateSuggestionSelection(suggestions) {
+    const suggestionElements = suggestions.querySelectorAll('.city-suggestion');
+    suggestionElements.forEach((el, index) => {
+        if (index === selectedSuggestionIndex) {
+            el.classList.add('selected');
+            // Scroll into view if needed
+            el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+        else {
+            el.classList.remove('selected');
+        }
+    });
+}
+function showLocalCities(query, suggestions) {
+    const matches = cities.filter((city) => city.name.toLowerCase().startsWith(query) ||
+        city.state.toLowerCase().startsWith(query));
+    if (matches.length > 0) {
+        renderCitySuggestions(matches.slice(0, 10), suggestions);
+    }
+    else {
+        // Show all cities when no matches found, sorted alphabetically by name
+        const sortedCities = [...cities].sort((a, b) => a.name.localeCompare(b.name));
+        renderCitySuggestions(sortedCities, suggestions);
     }
 }
 function initCitySelector() {
@@ -294,50 +365,80 @@ function initCitySelector() {
             syncCityInputs(input.value);
             if (query.length < 1) {
                 suggestions.classList.remove('active');
+                selectedSuggestionIndex = -1;
                 return;
             }
-            const matches = cities.filter((city) => city.name.toLowerCase().startsWith(query) ||
-                city.state.toLowerCase().startsWith(query));
-            if (matches.length === 0) {
-                if (nominatimTimer)
-                    clearTimeout(nominatimTimer);
-                if (query.length >= 3) {
-                    suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
-                    suggestions.classList.add('active');
-                    nominatimTimer = setTimeout(() => fetchNominatimCities(query, suggestions), 2000);
-                }
-                else {
-                    suggestions.classList.remove('active');
-                }
-                return;
+            // Clear any existing timers
+            if (cityRetrievalTimer)
+                clearTimeout(cityRetrievalTimer);
+            if (localFallbackTimer)
+                clearTimeout(localFallbackTimer);
+            if (query.length >= 3) {
+                // Show loading indicator immediately
+                suggestions.innerHTML = '<div class="city-suggestion-loading"><span class="spinner"></span> Searching...</div>';
+                suggestions.classList.add('active');
+                selectedSuggestionIndex = -1;
+                let apiResolved = false;
+                // Wait a bit before making API call (debounce)
+                cityRetrievalTimer = setTimeout(() => {
+                    // Start API call after debounce delay
+                    fetchGeoNamesCities(query, suggestions).then((success) => {
+                        apiResolved = true;
+                        // If API failed or returned no results, try local fallback
+                        if (!success) {
+                            showLocalCities(query, suggestions);
+                        }
+                    });
+                    // Set timeout to show local results after 5 seconds if API hasn't resolved
+                    localFallbackTimer = setTimeout(() => {
+                        if (!apiResolved) {
+                            showLocalCities(query, suggestions);
+                        }
+                    }, API_TIMEOUT);
+                }, SEARCH_DEBOUNCE_DURATION);
             }
-            if (nominatimTimer) {
-                clearTimeout(nominatimTimer);
-                nominatimTimer = null;
+            else {
+                suggestions.classList.remove('active');
+                selectedSuggestionIndex = -1;
             }
-            suggestions.innerHTML = matches
-                .slice(0, 10)
-                .map((city) => `<div class="city-suggestion" data-city="${city.name}">${city.name}, ${city.state}</div>`)
-                .join('');
-            suggestions.classList.add('active');
-            suggestions.querySelectorAll('.city-suggestion').forEach((el) => {
-                el.addEventListener('click', () => {
-                    const cityName = el.dataset.city;
-                    selectCity(cityName || '');
-                    syncCityInputs(cityName || '');
-                    suggestions.classList.remove('active');
-                });
-            });
         });
         input.addEventListener('blur', () => {
-            setTimeout(() => suggestions.classList.remove('active'), 200);
+            setTimeout(() => {
+                suggestions.classList.remove('active');
+                selectedSuggestionIndex = -1;
+            }, 200);
         });
         input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const firstSuggestion = suggestions.querySelector('.city-suggestion');
-                if (firstSuggestion) {
-                    firstSuggestion.click();
+            const suggestionElements = suggestions.querySelectorAll('.city-suggestion');
+            const isActive = suggestions.classList.contains('active');
+            const hasResults = suggestionElements.length > 0;
+            if (!isActive || !hasResults) {
+                if (e.key === 'Enter') {
+                    // If no dropdown, just use current input value
+                    e.preventDefault();
                 }
+                return;
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestionElements.length - 1);
+                updateSuggestionSelection(suggestions);
+            }
+            else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0);
+                updateSuggestionSelection(suggestions);
+            }
+            else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestionElements.length) {
+                    suggestionElements[selectedSuggestionIndex].click();
+                }
+            }
+            else if (e.key === 'Escape') {
+                suggestions.classList.remove('active');
+                selectedSuggestionIndex = -1;
+                input.blur();
             }
         });
     });
@@ -431,26 +532,6 @@ function handleUrlParams() {
         syncCityInputs(cityParam);
         selectCity(cityParam);
     }
-}
-function updateDescriptions() {
-    listings.forEach((listing) => {
-        const descCell = listing.element.querySelector('.listing-description');
-        if (!descCell)
-            return;
-        const firstSentence = extractFirstSentence(listing.content);
-        descCell.textContent = firstSentence;
-    });
-}
-function extractFirstSentence(content) {
-    const trimmed = content.trim();
-    const match = trimmed.match(/^[^.!?]*[.!?]/);
-    if (match) {
-        return match[0].trim();
-    }
-    if (trimmed.length > 100) {
-        return trimmed.substring(0, 100) + '...';
-    }
-    return trimmed;
 }
 function updateLocations() {
     listings.forEach((listing) => {

@@ -64,7 +64,6 @@ A spacer element (`#header-spacer`) sits at the top of the page:
    - Finding nearest city for multi-city events
    - Dynamic tag collection and three-state filtering
    - Tag color assignment via hash-based palette
-   - Extracting first sentence for description
 
 ## Key Files
 
@@ -101,13 +100,15 @@ Each listing generates its own page at `/event/{listing-name}/`.
 ### Listing Format
 ```yaml
 ---
-title: Event Name
+title: "Event Name"
 tags: [jam, meetup, conference, workshop, networking]
 cities: [CityName]  # or multiple: [City1, City2, City3]
 last_updated: 2026-01-15
 external_url: https://example.com
+short_description: "One-line description shown in the main listing table."
 ---
-Description content. First sentence shown in listing, full text on event page.
+Full description shown on the event's detail page. If long_description is
+empty in the sheet, short_description is used here too.
 ```
 
 ### Cities Format
