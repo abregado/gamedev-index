@@ -1,7 +1,7 @@
 ---
 title: "GG Bavaria"
 tags: [messe]
-cities: [Muenchen]
+cities: [München]
 last_updated: 2026-03-30
 external_url: https://ggbavaria.games-bavaria.com/
 short_description: "Die GG Bavaria bringt Indie Games, E-Sport und Nerd Culture zusammen – für ein vielfältiges Publikum aus Gaming-Communitys, Branchenprofis und Unternehmen."

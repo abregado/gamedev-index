@@ -102,6 +102,7 @@ def main():
 
     for row in rows:
         listing_id = row.get("listing_id", "").strip()
+        ready_to_add = row.get("ready_to_add", "").strip()
         if not listing_id:
             continue
 
