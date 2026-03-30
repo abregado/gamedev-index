@@ -1,7 +1,7 @@
 ---
 title: "Indie Outpost"
 tags: [meetup, talks]
-cities: [Regensburg, Nürnberg, Bamberg, Würzburg, Bamberg, Bayreuth]
+cities: [Regensburg, Nürnberg, Bamberg, Würzburg, Bayreuth]
 last_updated: 2026-03-30
 external_url: https://indieoutpost.org/
 short_description: "Input Talks aus der Branche, und Treffen für alle, die sich über das bloße Zocken hinaus mit dem Thema Games beschäftigen"

@@ -1,4 +1,5 @@
 # North Rhine-Westphalia (NRW)
+# Note: "Köln" is the German name used in sheet-sourced listings; "Cologne" remains for legacy listings.
 - name: Cologne
   state: NRW
   country: Germany
@@ -129,3 +130,104 @@
   state: Hessen
   country: Germany
   coordinates: [49.9953, 8.4113]
+
+# NRW (German-name alias)
+- name: Köln
+  state: NRW
+  country: Germany
+  coordinates: [50.9333, 6.9500]
+
+# Berlin
+- name: Berlin
+  state: Berlin
+  country: Germany
+  coordinates: [52.5200, 13.4050]
+
+# Hamburg
+- name: Hamburg
+  state: Hamburg
+  country: Germany
+  coordinates: [53.5753, 10.0153]
+
+# Lower Saxony
+- name: Hannover
+  state: Niedersachsen
+  country: Germany
+  coordinates: [52.3759, 9.7320]
+
+# Saxony
+- name: Leipzig
+  state: Sachsen
+  country: Germany
+  coordinates: [51.3397, 12.3731]
+
+- name: Dresden
+  state: Sachsen
+  country: Germany
+  coordinates: [51.0504, 13.7373]
+
+# Bavaria
+- name: München
+  state: Bayern
+  country: Germany
+  coordinates: [48.1351, 11.5820]
+
+- name: Nürnberg
+  state: Bayern
+  country: Germany
+  coordinates: [49.4521, 11.0767]
+
+- name: Bamberg
+  state: Bayern
+  country: Germany
+  coordinates: [49.8988, 10.9028]
+
+- name: Würzburg
+  state: Bayern
+  country: Germany
+  coordinates: [49.7913, 9.9534]
+
+- name: Regensburg
+  state: Bayern
+  country: Germany
+  coordinates: [49.0134, 12.1016]
+
+- name: Bayreuth
+  state: Bayern
+  country: Germany
+  coordinates: [49.9456, 11.5713]
+
+# Baden-Württemberg
+- name: Karlsruhe
+  state: Baden-Württemberg
+  country: Germany
+  coordinates: [49.0069, 8.4037]
+
+# Rhineland-Palatinate
+- name: Trier
+  state: Rheinland-Pfalz
+  country: Germany
+  coordinates: [49.7497, 6.6371]
+
+# Saarland
+- name: Saarbrücken
+  state: Saarland
+  country: Germany
+  coordinates: [49.2354, 6.9969]
+
+# Schleswig-Holstein
+- name: Kiel
+  state: Schleswig-Holstein
+  country: Germany
+  coordinates: [54.3233, 10.1228]
+
+- name: Neumünster
+  state: Schleswig-Holstein
+  country: Germany
+  coordinates: [54.0714, 9.9861]
+
+# Hessen (additional)
+- name: Dieburg
+  state: Hessen
+  country: Germany
+  coordinates: [49.8969, 8.8427]
