@@ -1,8 +1,8 @@
 ---
 title: "Games Ground"
-tags: [messe]
+tags: [exhibition]
 cities: [Berlin]
-last_updated: 2026-03-30
+last_updated: 2026-04-04
 external_url: https://www.gamesground.de/
 short_description: "An exhibition event."
 ---

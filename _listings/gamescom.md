@@ -1,8 +1,8 @@
 ---
 title: "Gamescom"
-tags: [messe]
+tags: [exhibition]
 cities: [Köln]
-last_updated: 2026-03-30
+last_updated: 2026-04-04
 external_url: https://www.gamescom.global/en
 short_description: "Biggest gaming evening in Europe"
 ---

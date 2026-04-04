@@ -1,8 +1,8 @@
 ---
 title: "Indie Camp"
-tags: [activities]
+tags: [workshop, meetup]
 cities: [Trier]
-last_updated: 2026-03-30
+last_updated: 2026-04-04
 external_url: https://games-ahead.de/indie-camp/
 short_description: "Abseits vom Alltag verbringen Indie-Entwickler:innen, Studierende und Kreative gemeinsam ein Wochenende voller Austausch, Spaß und gemeinsamer Aktivitäten."
 ---

@@ -1,8 +1,8 @@
 ---
 title: "Massif Games Convention"
-tags: [messe]
+tags: [exhibition]
 cities: [Frankfurt]
-last_updated: 2026-03-30
+last_updated: 2026-04-04
 external_url: https://www.massifgamesconvention.de/
 short_description: "Massif Games Convention bringt Gaming, digitale Kunst und E-Sports in die Frankfurter Innenstadt"
 ---
