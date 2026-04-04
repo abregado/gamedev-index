@@ -17,7 +17,7 @@ robots: noindex, nofollow
 
     <p>
     If you would like to add your own entry to the list, please write to
-    <a href="mailto:test@notareallinkyet.com">test@notareallinkyet.com</a>
+    <a href="mailto:contact@gamedevtreffs.de">contact@gamedevtreffs.de</a>
     </p>
 
     <p>

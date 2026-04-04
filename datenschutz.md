@@ -41,7 +41,7 @@ robots: noindex, nofollow
   </p>
 
   <p>  
-    E-Mail Kontakt: <a href="mailto:contact@gamedevtreff.com">contact@gamedevtreff.com</a>
+    E-Mail Kontakt: <a href="mailto:contact@gamedevtreffs.de">contact@gamedevtreffs.de</a>
   </p>
 
   <p>  
