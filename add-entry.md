@@ -24,7 +24,8 @@ robots: noindex, nofollow
     Here is what we will need:
     <ul>
         <li>A name for your local community or event</li>
-        <li>A short description </li>
+        <li>A short description for the list view</li>
+        <li>A description for the entry page, which can be longer</li>
         <li>One or more cities</li>
         <li>One or more event tags</li>
         <li>A single link where visitors can learn more</li>
@@ -44,7 +45,7 @@ robots: noindex, nofollow
         </p>
 
         <p>
-        Your description can be as long as you want, but it will be truncated in the list view.
+        Both descriptions can technically be as long as you want, but the description for the list view will get truncated after a few lines on mobile.
         </p>
 
     <h3>A single link</h3>
@@ -83,7 +84,8 @@ robots: noindex, nofollow
       </ul>
 
       <p>
-      If your event or community fits none of those, feel free to suggest a new one. We are trying to keep the list relatively short, and to not get too specific, to avoid users accidentally filtering out entries they would have liked to see. But we are of course open to ideas.
+      If your event or community fits none of those, feel free to suggest a new one.<br>
+      We are trying to keep the list relatively short, and to not get too specific. This is to avoid users accidentally filtering out entries they would have liked to see, and to keep out information that is likely to change often. But we are of course open to ideas.
       </p>
 
     <h3>Updates and removal</h3>
