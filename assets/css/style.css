@@ -724,6 +724,26 @@ body {
   text-decoration: underline;
 }
 
+/* Hero Heading + Logo */
+.header-hero-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.header-hero-logo-spacer {
+  width: 0px;
+  flex-shrink: 0;
+}
+
+.header-hero-logo {
+  width: 54px;
+  height: auto;
+  flex-shrink: 0;
+  margin-left: 1px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   body {
@@ -770,12 +790,21 @@ body {
     margin: 0 -1rem 0 -1rem;
   }
 
+    .header-hero-logo {
+        width: 44px;
+    }
+
   .header-hero-title {
     font-size: 2rem;
   }
 
   .header-hero-subtitle {
     font-size: 1rem;
+  }
+
+  .header-hero .header-add-button {
+    right: auto;
+    left: 1rem;
   }
 
   .header-compact {
