@@ -1,6 +1,6 @@
 ---
 title: "Gamescom"
-tags: [messe]
+tags: [exhibition]
 cities: [Köln]
 last_updated: 2026-03-30
 external_url: https://www.gamescom.global/en
