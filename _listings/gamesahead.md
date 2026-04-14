@@ -1,8 +1,8 @@
 ---
 title: "Games Ahead"
-tags: [meetup, messe, jam, activities, coworking]
+tags: [meetup, exhibition, jam, coworking, workshop]
 cities: [Trier]
-last_updated: 2026-03-30
+last_updated: 2026-04-04
 external_url: https://games-ahead.de/
 short_description: "Ein gemeinnütziger Verein, der junge Kreative fördert und ihnen Raum gibt, sich zu vernetzen, auszuprobieren und Projekte zu verwirklichen."
 ---

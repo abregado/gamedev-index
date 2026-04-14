@@ -17,14 +17,15 @@ robots: noindex, nofollow
 
     <p>
     If you would like to add your own entry to the list, please write to
-    <a href="mailto:test@notareallinkyet.com">test@notareallinkyet.com</a>
+    <a href="mailto:contact@gamedevtreffs.de">contact@gamedevtreffs.de</a>
     </p>
 
     <p>
     Here is what we will need:
     <ul>
         <li>A name for your local community or event</li>
-        <li>A short description </li>
+        <li>A short description for the list view</li>
+        <li>A description for the entry page, which can be longer</li>
         <li>One or more cities</li>
         <li>One or more event tags</li>
         <li>A single link where visitors can learn more</li>
@@ -44,14 +45,48 @@ robots: noindex, nofollow
         </p>
 
         <p>
-        Your description can be as long as you want, but it will be truncated in the list view.
+        Both descriptions can technically be as long as you want, but the description for the list view will get truncated after a few lines on mobile.
         </p>
 
     <h3>A single link</h3>
        Similarly, we only list a single link for your entry. That makes it less likely for your entry to end up with outdated data, and it makes it easier for visitors to know where to start. Your link should go to a place where they can easily learn what your community or event is all about. It could be your own website, a social media page, or even a Discord server invite.
 
     <h3>Tags!</h3>
-      You can find the tags we currently use at the top of the list. If your event or community fits none of those, feel free to suggest a new one. We recommend not getting too specific, as that can make it easy for visitors to accidentally filter out entries they would have liked to see. If in doubt, just ask.
+
+      <p>
+      Let us know which tags might fit for you. Here are the ones we currently use:
+      </p>      
+
+      <ul>
+        <li>
+            <i>Meetup:</i><br>
+            The catch-all for anything where you can regularly meet up with people interested in game development. Doesn't matter if it's just talking in a pub, show-and-tell in a conference room, or outside while mini-golfing.</li>
+        <li>
+            <i>Jam:</i><br>
+            As usual, local only. Having people in a meetup that join online game jams is a given &#128515;<br> 
+            This could be a local game jam you organize, or a location you provide, for people to join up in during other (online) game jams.</li>
+        <li>
+            <i>Talks:</i><br>
+            Talks / presentations / lectures aimed at game developers. Could be a separate event, or could just be a semi-regular part of e.g. your meetup.</li>
+        <li>
+            <i>Workshop:</i><br>
+            Events focused on learning from each other.</li>
+        <li>
+            <i>Coworking:</i><br>
+            Regular opportunities for game developers to work together in a shared space.</li>
+        <li>
+            <i>Conference, Exhibition, Festival:</i><br>
+            These tags are for events that go beyond the scope of a regular meetup, and might draw in visitors from further away.</li>
+        <li><i>
+            Professional-focused:</i><br>
+            Use this tag if your event or community is e.g. mostly aimed at people who make their living by working on games. If so, please also include details on your target audience in the description, or on the page we link to.
+        </li>
+      </ul>
+
+      <p>
+      If your event or community fits none of those, feel free to suggest a new one.<br>
+      We are trying to keep the list relatively short, and to not get too specific. This is to avoid users accidentally filtering out entries they would have liked to see, and to keep out information that is likely to change often. But we are of course open to ideas.
+      </p>
 
     <h3>Updates and removal</h3>
 
