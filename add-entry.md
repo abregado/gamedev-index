@@ -83,7 +83,7 @@ robots: noindex, nofollow
         </li>
         <li>
             <i>Association:</i><br>
-            This tag is for e.V associations, Agentur, Ämter or Behörde that either support or operate events and list them directly on their websites. 
+            This tag is for associations (z.B. Vereine, Verbände, Behörden) that either support or operate events and list them directly on their websites. 
         </li>
       </ul>
 
