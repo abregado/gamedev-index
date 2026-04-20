@@ -9,14 +9,14 @@ robots: noindex, nofollow
     <a href="{{ '/' | relative_url }}" class="back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3L5 8l5 5"/></svg> Back to Event List</a>
   </nav>
 
-  <h1>Add your own Entry</h1>
+  <h1>New event listings</h1>
 
   {% include mission.html %}
 
-  <h2>Add your own Entry</h2>
+  <h2>How to get an event listed</h2>
 
     <p>
-    If you would like to add your own entry to the list, please write to
+    If you would like to add your event to the list, please write to
     <a href="mailto:contact@gamedevtreffs.de">contact@gamedevtreffs.de</a>
     </p>
 
@@ -67,10 +67,10 @@ robots: noindex, nofollow
             This could be a local game jam you organize, or a location you provide, for people to join up in during other (online) game jams.</li>
         <li>
             <i>Talks:</i><br>
-            Talks / presentations / lectures aimed at game developers. Could be a separate event, or could just be a semi-regular part of e.g. your meetup.</li>
+            Events with focus on one or a series of Talks / presentations / lectures aimed at game developers. Generally is a separate event, rather than just part another event.</li>
         <li>
             <i>Workshop:</i><br>
-            Events focused on learning from each other.</li>
+            Events focused on learning from each other. If workshops sometimes happen as part of your regular meetup, then use the meetup tag.</li>
         <li>
             <i>Coworking:</i><br>
             Regular opportunities for game developers to work together in a shared space.</li>
@@ -80,6 +80,10 @@ robots: noindex, nofollow
         <li><i>
             Professional-focused:</i><br>
             Use this tag if your event or community is e.g. mostly aimed at people who make their living by working on games. If so, please also include details on your target audience in the description, or on the page we link to.
+        </li>
+        <li>
+            <i>Association</i>:<b>
+            This tag is for e.V associations, Agentur, Ämter or Behörde that either support or operate events and list them directly on their websites. 
         </li>
       </ul>
 
