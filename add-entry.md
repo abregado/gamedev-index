@@ -76,7 +76,8 @@ robots: noindex, nofollow
             Regular opportunities for game developers to work together in a shared space.</li>
         <li>
             <i>Conference, Exhibition, Festival:</i><br>
-            These tags are for events that go beyond the scope of a regular meetup, and might draw in visitors from further away.</li>
+            These tags are for events that go beyond the scope of a regular meetup, and might draw in visitors from further away.<br>
+            As a rule of thumb, these probably do not apply if your event takes place more than twice a year, or if none of your visitors stay at a hotel in order to attend.</li>
         <li><i>
             Professional-focused:</i><br>
             Use this tag if your event or community is e.g. mostly aimed at people who make their living by working on games. If so, please also include details on your target audience in the description, or on the page we link to.
