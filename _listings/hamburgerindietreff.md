@@ -1,9 +1,11 @@
 ---
-title: "Hamburger Indie Treff"
+title: "Indie Treff"
 tags: [meetup]
 cities: [Hamburg]
-last_updated: 2026-03-30
+last_updated: 2026-04-20
 external_url: https://www.indietreff.de/
-short_description: "Organisiert kostenfreie Veranstaltungen und Vorträge in Hamburg rund ums Indie-Dasein."
+short_description: "Vorträge anhören, Games von Hamburger Indies spielen, dich mit anderen austauschen und vernetzen, all das kannst du beim Indie Treff tun."
 ---
-Spiele zu entwickeln, ist wundervoll. Aber auch ganz schön hart. Deshalb organisieren wir kostenfreie Veranstaltungen und Vorträge in Hamburg rund ums Indie-Dasein.
+Vorträge anhören, Games von Hamburger Indies spielen, dich mit anderen austauschen und vernetzen, all das kannst du beim Indie Treff tun. Unsere Veranstaltungen sind dabei kostenfrei und öffentlich zugänglich. Sei mit dabei!
+--------------
+Listen to talks, play games from Hamburg indie developers, exchange ideas and network with others – all this awaits you at the Indie Treff. Our events are free and open to everybody. Come and join us!
