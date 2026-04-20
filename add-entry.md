@@ -82,7 +82,7 @@ robots: noindex, nofollow
             Use this tag if your event or community is e.g. mostly aimed at people who make their living by working on games. If so, please also include details on your target audience in the description, or on the page we link to.
         </li>
         <li>
-            <i>Association</i>:<b>
+            <i>Association:</i><br>
             This tag is for e.V associations, Agentur, Ämter or Behörde that either support or operate events and list them directly on their websites. 
         </li>
       </ul>
