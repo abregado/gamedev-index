@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   {% if page.robots %}<meta name="robots" content="{{ page.robots }}">{% endif %}
+  {% if page.description %}
+  <meta name="description" content="{{ page.description }}">
+  {% elsif page.short_description %}
+  <meta name="description" content="{{ page.short_description }}">
+  {% elsif site.description %}
+  <meta name="description" content="{{ site.description }}">
+  {% endif %}
   <title>{{ page.title | default: site.title }}</title>
   <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
