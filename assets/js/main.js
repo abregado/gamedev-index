@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTagColors();
     applyEventTagColors();
     applyFilters();
-    sortAlphabetically();
+    shuffleListings();
 });
 function loadCities() {
     const citiesData = document.getElementById('cities-data');
@@ -458,7 +458,7 @@ function selectCity(cityName) {
         sortByDistance();
     }
     else {
-        sortAlphabetically();
+        shuffleListings();
     }
 }
 function initHeaderBehavior() {
@@ -625,14 +625,21 @@ function updateDistances() {
         }
     });
 }
-function sortAlphabetically() {
+// Fisher-Yates shuffle algorithm
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+function shuffleListings() {
     const container = document.querySelector('.listings');
     if (!container)
         return;
-    const sorted = [...listings].sort((a, b) => {
-        return a.title.localeCompare(b.title);
-    });
-    sorted.forEach((listing) => {
+    const shuffled = shuffleArray(listings);
+    shuffled.forEach((listing) => {
         container.appendChild(listing.element);
     });
 }

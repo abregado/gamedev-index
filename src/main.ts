@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTagColors();
   applyEventTagColors();
   applyFilters();   
-  sortAlphabetically();
+  shuffleListings();
 });
 
 function loadCities(): void {
@@ -543,7 +543,7 @@ function selectCity(cityName: string): void {
   if (selectedCity) {
     sortByDistance();
   } else {
-    sortAlphabetically();
+    shuffleListings();
   }
 }
 
@@ -748,15 +748,23 @@ function updateDistances(): void {
   });
 }
 
-function sortAlphabetically(): void {
+// Fisher-Yates shuffle algorithm
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function shuffleListings(): void {
   const container = document.querySelector('.listings');
   if (!container) return;
 
-  const sorted = [...listings].sort((a, b) => {
-    return a.title.localeCompare(b.title);
-  });
+  const shuffled = shuffleArray(listings);
 
-  sorted.forEach((listing) => {
+  shuffled.forEach((listing) => {
     container.appendChild(listing.element);
   });
 }
@@ -811,4 +819,3 @@ function formatDistance(km: number): string {
     return `${Math.round(km / 10) * 10}&nbsp;km`;
   }
 }
-
